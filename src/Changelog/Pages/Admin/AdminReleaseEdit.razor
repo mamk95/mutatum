@@ -1,0 +1,124 @@
+﻿@page "/admin/release/{releaseId:int}"
+@attribute [Authorize]
+
+@using Changelog.Data
+@inject ReleaseService _releaseService
+@inject ChangeTypeService _changeTypeService
+@inject NavigationManager NavigationManager
+
+@if (failedToLoad)
+{
+    <div>Failed to load the release. Try again later.</div>
+}
+else
+{
+    <EditForm Model="release" OnValidSubmit="UpdateRelease">
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+
+            <InputText id="title" @bind-Value="release.Title" class="form-control" />
+        </div>
+
+
+        <label class="form-label">Version</label>
+        <div class="input-group mb-3">
+            <span class="input-group-text">Major</span>
+            <InputNumber aria-label="Major" @bind-Value="release.Major" class="form-control" />
+
+            <span class="input-group-text">Minor</span>
+            <InputNumber aria-label="Minor" @bind-Value="release.Minor" class="form-control" />
+
+            <span class="input-group-text">Patch</span>
+            <InputNumber aria-label="Patch" @bind-Value="release.Patch" class="form-control" />
+        </div>
+
+        <label class="form-label">Release date</label>
+        <div class="input-group mb-3">
+            <span class="input-group-text">Year</span>
+            <InputNumber aria-label="Year" @bind-Value="release.ReleaseYear" class="form-control" />
+
+            <span class="input-group-text">Month</span>
+            <InputNumber aria-label="Month" @bind-Value="release.ReleaseMonth" class="form-control" />
+
+            <span class="input-group-text">Day</span>
+            <InputNumber aria-label="Day" @bind-Value="release.ReleaseDay" class="form-control" />
+        </div>
+
+        <DataAnnotationsValidator />
+
+        <ValidationSummary />
+
+        <div class="mb-3 p-3" style="border: 1px solid black; border-radius: 12px;">
+            <h4>Changes</h4>
+
+            @for (var i = 0; i < release.Changes.Count; i++)
+            {
+                <hr />
+                <ChangeEdit @bind-change="release.Changes[i]" changeTypes="@changeTypes" />
+            }
+
+            <hr />
+
+            <button type="button" class="btn btn-link" @onclick="AddChange" style="text-decoration: none;">
+                <span class="oi oi-plus" aria-hidden="true"></span>
+                &nbsp;
+                Add change
+            </button>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update</button>
+    </EditForm>
+}
+
+<div class="my-3">
+    <h4>Preview (detailed)</h4>
+
+    <div style="padding: 32px; border: 1px solid black; border-radius: 4px;">
+        <ReleaseDetailed release="@release" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int releaseId { get; set; }
+
+    private Release release { get; set; }
+
+    private IList<ChangeType> changeTypes { get; set; }
+
+    private bool failedToLoad { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        changeTypes = _changeTypeService.GetChangeTypes();
+    }
+
+    protected override void OnParametersSet()
+    {
+        release = _releaseService.GetReleaseById(releaseId);
+
+        if (release == null)
+        {
+            failedToLoad = true;
+        }
+    }
+
+    private void UpdateRelease()
+    {
+        _releaseService.UpdateRelease(releaseId, release);
+        NavigationManager.NavigateTo($"/admin/project/{release.ProjectId}", true);
+    }
+
+    private void AddChange()
+    {
+        release.Changes.Add(new Change
+            {
+                ReleaseId = release.Id,
+                Release = release,
+                ChangeTypeId = changeTypes.First().Id,
+                ChangeType = changeTypes.First(),
+            });
+    }
+}

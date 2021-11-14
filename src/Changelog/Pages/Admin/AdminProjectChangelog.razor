@@ -1,0 +1,57 @@
+﻿@page "/admin/project/{projectId:int}"
+@attribute [Authorize]
+
+@using Changelog.Data
+@inject ProjectService _projectService
+
+<PageTitle>Todo @projectId</PageTitle>
+
+@if (failedToLoad)
+{
+    <div>Failed to load the project. Try again later.</div>
+}
+else if (project == null)
+{
+    <div>Loading...</div>
+}
+else
+{
+    <div>
+        <h2 class="d-inline">Changelog: @project.Name</h2>
+
+        <a aria-label="Edit project" class="mx-2" href="@($"/admin/project/{@project.Id}/edit")">
+            <span class="oi oi-pencil" aria-hidden="true"></span>
+        </a>
+    </div>
+
+    @if (project.Releases == null || project.Releases.Count < 1)
+    {
+        <div>No releases for this project</div>
+    }
+
+    @foreach (var release in project.Releases)
+    {
+        <ReleaseDetailed release="@release" showAdminButtons="@true" />
+    }
+}
+
+
+
+@code {
+    [Parameter]
+    public int projectId { get; set; }
+
+    private Project? project { get; set; }
+
+    private bool failedToLoad { get; set; } = false;
+
+    protected override void OnParametersSet()
+    {
+        project = _projectService.GetProjectById(projectId);
+
+        if (project == null)
+        {
+            failedToLoad = true;
+        }
+    }
+}

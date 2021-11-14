@@ -1,0 +1,80 @@
+﻿@using Changelog.Data
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime JsRuntime
+@inject NavigationManager NavigationManager
+@inject ReleaseService _releaseService
+
+<div class="mt-3" style="border-left: 5px solid #dadada; padding: 12px; padding-bottom: 1px;">
+    <div style="margin-bottom: 8px; border-bottom: 1px solid #dadada; display: flex; justify-content: space-between; align-items: center;">
+        <h3 class="d-inline">
+            @($"{release.Major}.{release.Minor}.{release.Patch}")
+
+            @if (!string.IsNullOrEmpty(@release.Title))
+            {
+                <span>&nbsp;-&nbsp;@release.Title</span>
+            }
+        </h3>
+
+        <div class="d-inline">
+            <span style="font-size: 12px;">@($"{release.ReleaseYear}/{release.ReleaseMonth}/{release.ReleaseDay}")</span>
+
+            @if (showAdminButtons)
+            {
+                <AuthorizeView>
+                    <Authorized>
+                        <a aria-label="Edit" class="mx-2" href="@($"/admin/release/{@release.Id}")">
+                            <span class="oi oi-pencil" aria-hidden="true"></span>
+                        </a>
+
+                        <a role="button" aria-label="Delete" @onclick="() => DeleteRelease(release.Id)">
+                            <span class="oi oi-trash" aria-hidden="true"></span>
+                        </a>
+                    </Authorized>
+                </AuthorizeView>
+            }
+        </div>
+    </div>
+
+
+    @if (release.Changes == null || release.Changes.Count < 1)
+    {
+        <div style="margin-top: 8px;">No changes for this release</div>
+    }
+
+    @foreach (var change in release.Changes)
+    {
+        <div style="margin-bottom: 16px;">
+            <ChangeDetailed change="@change" />
+        </div>
+    }
+
+</div>
+
+@code {
+    [Parameter]
+    public Release release { get; set; }
+
+    [Parameter]
+    public bool showAdminButtons { get; set; } = false;
+
+    private async Task DeleteRelease(int id)
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (!user.Identity.IsAuthenticated)
+        {
+            JsRuntime.InvokeAsync<bool>("alert", "You do not have permission to delete this release!");
+            return;
+        }
+
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete the release with ID={id}?");
+
+        if (confirmed)
+        {
+            _releaseService.DeleteReleaseById(id);
+            NavigationManager.NavigateTo(NavigationManager.Uri, true); // Reload page to update list
+        }
+    }
+    }

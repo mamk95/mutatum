@@ -1,0 +1,61 @@
+﻿@using Changelog.Data
+
+<EditForm EditContext="@EditContext">
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+
+        <InputText id="title" @bind-Value="change.Title" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label for="type" class="form-label">Type</label>
+
+        <InputSelect id="type" @bind-Value="change.ChangeTypeId" class="form-control">
+            @foreach (var changeType in changeTypes)
+            {
+                <option value="@changeType.Id">@changeType.Name</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="mb-3">
+        <label for="markdown" class="form-label">Markdown</label>
+
+        <InputTextArea id="markdown" @bind-Value="change.Markdown" class="form-control" />
+    </div>
+
+    <DataAnnotationsValidator />
+
+    <ValidationSummary />
+</EditForm>
+
+@code {
+    [Parameter]
+    public Change change { get; set; }
+
+    [Parameter]
+    public EventCallback<Change> changeChanged { get; set; }
+
+    [Parameter]
+    public IList<ChangeType> changeTypes { get; set; }
+
+    private EditContext EditContext;
+
+    protected override void OnInitialized()
+    {
+        EditContext = new EditContext(change);
+        EditContext.OnFieldChanged += EditContext_OnFieldChanged;
+
+        base.OnInitialized();
+    }
+
+    private void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
+    {
+        if (e.FieldIdentifier.FieldName == nameof(change.ChangeTypeId))
+        {
+            change.ChangeType = changeTypes.First(ct => ct.Id == change.ChangeTypeId);
+        }
+
+        changeChanged.InvokeAsync(change);
+    }
+}

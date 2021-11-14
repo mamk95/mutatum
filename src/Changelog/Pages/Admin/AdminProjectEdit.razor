@@ -1,0 +1,73 @@
+﻿@page "/admin/project/{projectId:int}/edit"
+@attribute [Authorize]
+
+@using Changelog.Data
+@inject ProjectService _projectService
+@inject NavigationManager NavigationManager
+
+
+<h3>AdminEditProject</h3>
+
+@if (failedToLoad)
+{
+    <div>Failed to load the project. Try again later.</div>
+}
+else
+{
+    <EditForm Model="project" OnValidSubmit="UpdateProject">
+        <div>
+            <label for="name" class="form-label">Name</label>
+
+            <InputText id="name" @bind-Value="project.Name" class="form-control" />
+        </div>
+
+        <div>
+            <label for="desc" class="form-label">Description</label>
+
+            <InputText id="desc" @bind-Value="project.Description" class="form-control" />
+        </div>
+
+        <div>
+            <label for="sort" class="form-label">Sort order (sidebar)</label>
+
+            <InputNumber id="sort" @bind-Value="project.SortOrder" class="form-control" />
+        </div>
+
+        <div>
+            <label for="hidden" class="form-label">Hidden/disabled</label>
+
+            <InputCheckbox id="desc" @bind-Value="project.Hidden" />
+        </div>
+
+        <DataAnnotationsValidator />
+
+        <ValidationSummary />
+
+        <button type="submit" class="btn btn-primary">Update</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int projectId { get; set; }
+
+    private Project project { get; set; } = new Project();
+
+    private bool failedToLoad { get; set; } = false;
+
+    protected override void OnParametersSet()
+    {
+        project = _projectService.GetProjectById(projectId);
+
+        if (project == null)
+        {
+            failedToLoad = true;
+        }
+    }
+
+    private void UpdateProject()
+    {
+        _projectService.UpdateProject(projectId, project.Name, project.Description, project.Hidden);
+        NavigationManager.NavigateTo("/admin/project", true);
+    }
+}

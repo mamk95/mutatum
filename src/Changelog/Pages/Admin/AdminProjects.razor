@@ -1,0 +1,68 @@
+﻿@page "/admin/project"
+@attribute [Authorize]
+
+@using Changelog.Data
+@inject ProjectService _projectService
+@inject IJSRuntime JsRuntime
+@inject NavigationManager NavigationManager
+
+<h3>Projects</h3>
+
+@if (projects == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <a href="/admin/project/new">Create new project</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th style="width: 80px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var project in projects)
+            {
+                <tr>
+                    <td>@project.Id</td>
+                    <td>@project.Name</td>
+                    <td>@project.Description</td>
+                    <td>
+                        <a aria-label="Edit" class="mx-2" href="@($"/admin/project/{@project.Id}/edit")">
+                            <span class="oi oi-pencil" aria-hidden="true"></span>
+                        </a>
+
+                        <a role="button" aria-label="Delete" @onclick="() => DeleteProject(project.Id)">
+                            <span class="oi oi-trash" aria-hidden="true"></span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IList<Project> projects { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        projects = _projectService.GetProjects();
+    }
+
+    private async Task DeleteProject(int id)
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete the project with ID={id}?");
+
+        if (confirmed)
+        {
+            _projectService.DeleteProjectById(id);
+            NavigationManager.NavigateTo(NavigationManager.Uri, true); // Reload page to update e.g. navbar
+        }
+    }
+}

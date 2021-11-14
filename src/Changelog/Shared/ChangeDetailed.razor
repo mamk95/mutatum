@@ -1,0 +1,18 @@
+﻿@using Changelog.Data
+
+<div>
+    <span style="padding: 4px; background-color: @change.ChangeType.Color; border-radius: 4px;">@change.ChangeType.Name</span>
+    <span style="font-size: 18px; font-weight: bold;">@change.Title</span>
+</div>
+
+@if (!string.IsNullOrEmpty(change.Markdown))
+{
+    <div style="margin-top: 8px; margin-left: 12px; border-left: 2px solid #dadada; padding: 12px;">
+        <MarkdownDisplay markdown="@change.Markdown" />
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Change change { get; set; }
+}

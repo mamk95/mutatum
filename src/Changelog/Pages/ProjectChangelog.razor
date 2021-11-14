@@ -1,0 +1,51 @@
+﻿@page "/project/{projectId:int}"
+
+@using Changelog.Data
+@inject ProjectService _projectService
+
+<PageTitle>Todo @projectId</PageTitle>
+
+@if (failedToLoad)
+{
+    <div>Failed to load the project. Try again later.</div>
+}
+else if (project == null)
+{
+    <div>Loading...</div>
+}
+else
+{
+    <h2>@project.Name</h2>
+
+    @if (project.Releases == null || project.Releases.Count < 1)
+    {
+        <div style="margin-top: 8px;">No releases for this project</div>
+    }
+
+    @foreach (var release in project.Releases)
+    {
+        <ReleaseDetailed release="@release" />
+    }
+}
+
+
+
+@code {
+    [Parameter]
+    public int projectId { get; set; }
+
+    private Project? project { get; set; }
+
+    private bool failedToLoad { get; set; } = false;
+
+    protected override void OnParametersSet()
+    {
+        project = _projectService.GetProjectById(projectId);
+
+        if (project == null || project.Hidden)
+        {
+            project = null;
+            failedToLoad = true;
+        }
+    }
+}

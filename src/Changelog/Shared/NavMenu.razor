@@ -1,0 +1,132 @@
+﻿@using Changelog.Data
+@inject ProjectService _projectService
+@inject NavigationManager Navigation
+
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">Changelog</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        @if (adminView)
+        {
+            <AuthorizeView>
+                <Authorized>
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                            <span class="oi oi-chevron-left" aria-hidden="true"></span> Back
+                        </NavLink>
+                    </div>
+
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="admin/project" Match="NavLinkMatch.All">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> Projects
+                        </NavLink>
+                    </div>
+
+                    @foreach (var project in projects)
+                    {
+                        <div class="nav-item px-3">
+                            <NavLink class="nav-link" href="@($"admin/project/{project.Id}")">
+                                <span class="oi oi-list" aria-hidden="true"></span> @project.Name @if (project.Hidden)
+                                {
+                                    <span>&nbsp;(Hidden)</span>
+                                }
+                            </NavLink>
+                        </div>
+                    }
+
+                </Authorized>
+            </AuthorizeView>
+        }
+        else
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <span class="oi oi-home" aria-hidden="true"></span> Overview
+                </NavLink>
+            </div>
+
+            @foreach (var project in projects.Where(p => !p.Hidden))
+            {
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="@($"project/{project.Id}")">
+                        <span class="oi oi-list" aria-hidden="true"></span> @project.Name
+                    </NavLink>
+                </div>
+            }
+        }
+    </nav>
+
+    <div class="options">
+
+        @if (adminView)
+        {
+            <AuthorizeView>
+                <Authorized>
+                    <div style="display: flex; justify-content: space-between; align-items: center; height: 100%; padding: 0 8px;">
+                        <div style="font-size: 12px; color: gray;"><a href="Identity/Account/Manage">@context.User.Identity?.Name</a></div>
+
+                        <form method="post" action="Identity/Account/LogOut">
+                            <button type="submit" aria-label="Log out" class="btn btn-link">
+                                <span aria-hidden="true" class="oi oi-account-logout" style="color: white; font-size: 24px;"></span>
+                            </button>
+                        </form>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
+        }
+        else
+        {
+            <div style="display: flex; justify-content: space-between; align-items: center; height: 100%; padding: 0 8px;">
+                <div style="font-size: 12px; color: gray;">Powered by <a href="#">mutatum</a></div>
+
+                <NavLink href="/admin/project">
+                    <span class="oi oi-cog" aria-hidden="true" style="color: white; font-size: 24px;"></span>
+                </NavLink>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private IList<Project> projects { get; set; }
+
+    private bool adminView { get; set; } = false;
+
+    // Used to hide and toggle menu on mobile
+    private bool collapseNavMenu = true;
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        projects = _projectService.GetProjects();
+
+        Navigation.LocationChanged += LocationChanged;
+        SetAdminViewByCurrentUrl();
+    }
+
+    private void LocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        SetAdminViewByCurrentUrl();
+    }
+
+    private void SetAdminViewByCurrentUrl()
+    {
+        var oldValueAdminView = adminView;
+        var currentUrl = Navigation.ToBaseRelativePath(Navigation.Uri);
+        adminView = currentUrl == "admin" || currentUrl.StartsWith("admin/");
+
+        if (oldValueAdminView != adminView)
+            StateHasChanged();
+    }
+}
