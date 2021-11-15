@@ -16,11 +16,27 @@ namespace Changelog.Data
 
         public string? Title { get; set; }
 
+        [MaxLength(200)]
+        public string ShortDescription { get; set; }
+
+        public string LongDescriptionMarkdown { get; set; }
+
         public int? Major { get; set; }
 
         public int? Minor { get; set; }
 
         public int? Patch { get; set; }
+
+        [NotMapped]
+        public string VersionAndTitle
+        {
+            get
+            {
+                if (Major == null) return Title;
+                else if (Title == null) return $"{Major}.{Minor}.{Patch}";
+                else return $"{Major}.{Minor}.{Patch} - {Title}";
+            }
+        }
 
         [Range(1980, 2099)]
         public int ReleaseYear { get; set; }

@@ -19,6 +19,17 @@ else
             <InputText id="title" @bind-Value="release.Title" class="form-control" />
         </div>
 
+        <div class="mb-3">
+            <label for="shortdesc" class="form-label">Short description</label>
+
+            <InputTextArea id="shortdesc" @bind-Value="release.ShortDescription" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label for="longdesc" class="form-label">Long description in markdown</label>
+
+            <InputTextArea id="longdesc" @bind-Value="release.LongDescriptionMarkdown" class="form-control" />
+        </div>
 
         <label class="form-label">Version</label>
         <div class="input-group mb-3">
