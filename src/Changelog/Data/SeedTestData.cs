@@ -67,21 +67,24 @@ public class SeedTestData
             {
                 Id = 1,
                 Name = "New",
-                Color = "#00ca00",
+                BackgroundColor = "#00ca00",
+                TextColor = "white",
             });
 
             await context.ChangeTypes.AddAsync(new ChangeType
             {
                 Id = 2,
                 Name = "Improved",
-                Color = "#9393ff",
+                BackgroundColor = "#9393ff",
+                TextColor = "white",
             });
 
             await context.ChangeTypes.AddAsync(new ChangeType
             {
                 Id = 3,
                 Name = "Fixed",
-                Color = "#ea00ea",
+                BackgroundColor = "#ea00ea",
+                TextColor = "white",
             });
         }
 

@@ -14,6 +14,12 @@ namespace Changelog.Data
         /// Can be a CSS color name or a hex color (with included hashtag before the hex)
         /// </summary>
         [Required]
-        public string Color { get; set; }
+        public string BackgroundColor { get; set; }
+
+        /// <summary>
+        /// Can be a CSS color name or a hex color (with included hashtag before the hex)
+        /// </summary>
+        [Required]
+        public string TextColor { get; set; }
     }
 }

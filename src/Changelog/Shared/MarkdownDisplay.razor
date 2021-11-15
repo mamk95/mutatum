@@ -12,7 +12,10 @@
 
     protected override void OnParametersSet()
     {
-        markdownAsHtml = Markdown.ToHtml(markdown);
+        if (string.IsNullOrEmpty(markdown))
+            markdownAsHtml = "";
+        else
+            markdownAsHtml = Markdown.ToHtml(markdown);
     }
 }
 
