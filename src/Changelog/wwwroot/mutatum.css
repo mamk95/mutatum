@@ -1,0 +1,77 @@
+﻿.mutatum--popover {
+    background: white;
+    color: black;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: none;
+    box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.75);
+    width: 300px;
+}
+
+    .mutatum--popover[data-show] {
+        display: block !important;
+    }
+
+.mutatum--heading {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #d4d4d4;
+    padding-bottom: 8px;
+}
+
+.mutatum--no-releases {
+    margin-bottom: 16px;
+}
+
+.mutatum--release {
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #d4d4d4;
+}
+
+.mutatum--release-heading {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.mutatum--release-changes {
+    display: flex;
+    gap: 4px;
+}
+
+.mutatum--release-change {
+    font-size: 12px;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.mutatum--release-description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+}
+
+    .mutatum--release-description:hover {
+        line-clamp: none;
+        -webkit-line-clamp: none;
+    }
+
+.mutatum--footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+}
+
+.mutatum--powered-by {
+    color: gray;
+}
+
+.mutatum--show-more {
+    text-decoration: none;
+    color: rgb(0, 102, 204);
+}

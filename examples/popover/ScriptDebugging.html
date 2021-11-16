@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html style="height: 100%;">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="https://app-mutatum-demo.azurewebsites.net/mutatum.css">
+    <script src="https://app-mutatum-demo.azurewebsites.net/mutatum.js"></script>
+</head>
+<body style="height: 100%;">
+    
+    <div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; gap: 32px;">
+        <button id="button-project-1" style="height: 30px;">Click me to show project 1 (left)</button>
+
+        <button id="button-project-2" style="height: 30px;">Click me to show project 2 (top)</button>
+
+        <button id="button-project-3" style="height: 30px;">Click me to show project 3 (auto)</button>
+    </div>
+
+    <script>
+        Mutatum.AddPopover("button-project-1", 1, "left");
+        Mutatum.AddPopover("button-project-2", 2, "top");
+        Mutatum.AddPopover("button-project-3", 3);
+    </script>
+
+
+
+</body>
+</html>
