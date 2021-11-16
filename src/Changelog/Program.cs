@@ -29,6 +29,11 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "AllowAnyOrigin", builder => builder.AllowAnyOrigin());
+});
+
 var app = builder.Build();
 
 await SeedTestData.Seed(app.Services.CreateScope().ServiceProvider);
@@ -51,10 +56,12 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseCors();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapControllers().RequireCors("AllowAnyOrigin");
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
