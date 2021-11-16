@@ -25,6 +25,10 @@ builder.Services.AddScoped<ProjectService>();
 builder.Services.AddScoped<ReleaseService>();
 builder.Services.AddScoped<ChangeTypeService>();
 
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
+
 var app = builder.Build();
 
 await SeedTestData.Seed(app.Services.CreateScope().ServiceProvider);
