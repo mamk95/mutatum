@@ -21,12 +21,12 @@ namespace Changelog.Data
             return _context.Projects
                 .Where(p => p.Id == id)
                 .Include(p => p.Releases
-                    .OrderBy(r => r.ReleaseYear)
-                    .ThenBy(r => r.ReleaseMonth)
-                    .ThenBy(r => r.ReleaseDay)
-                    .ThenBy(r => r.Major)
-                    .ThenBy(r => r.Minor)
-                    .ThenBy(r => r.Patch))
+                    .OrderByDescending(r => r.ReleaseYear)
+                    .ThenByDescending(r => r.ReleaseMonth)
+                    .ThenByDescending(r => r.ReleaseDay)
+                    .ThenByDescending(r => r.Major)
+                    .ThenByDescending(r => r.Minor)
+                    .ThenByDescending(r => r.Patch))
                 .ThenInclude(r => r.Changes)
                 .ThenInclude(c => c.ChangeType)
                 .FirstOrDefault();

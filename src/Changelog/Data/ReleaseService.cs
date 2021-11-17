@@ -15,12 +15,6 @@ namespace Changelog.Data
         {
             return _context.Releases
                 .Where(r => r.Id == id)
-                .OrderBy(r => r.ReleaseYear)
-                .ThenBy(r => r.ReleaseMonth)
-                .ThenBy(r => r.ReleaseDay)
-                .ThenBy(r => r.Major)
-                .ThenBy(r => r.Minor)
-                .ThenBy(r => r.Patch)
                 .Include(r => r.Changes)
                 .ThenInclude(c => c.ChangeType)
                 .FirstOrDefault();
