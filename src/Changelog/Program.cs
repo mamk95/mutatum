@@ -21,9 +21,15 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 
-builder.Services.AddScoped<ProjectService>();
-builder.Services.AddScoped<ReleaseService>();
-builder.Services.AddScoped<ChangeTypeService>();
+{ // Data services
+    builder.Services.AddScoped<ProjectService>();
+    builder.Services.AddScoped<ReleaseService>();
+    builder.Services.AddScoped<ChangeTypeService>();
+}
+
+{ // Reading AppSettings options
+    builder.Services.Configure<BrandingOptions>(builder.Configuration.GetSection(BrandingOptions.AppsettingsSectionName));
+}
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore

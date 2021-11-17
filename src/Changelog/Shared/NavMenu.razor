@@ -1,10 +1,10 @@
-﻿@using Changelog.Data
-@inject ProjectService _projectService
+﻿@inject ProjectService _projectService
 @inject NavigationManager Navigation
+@inject IOptions<BrandingOptions> _brandingOptions
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">Changelog</a>
+        <a class="navbar-brand" href="">@_brandingOptions.Value.Name</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>

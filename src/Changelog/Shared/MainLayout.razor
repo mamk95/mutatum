@@ -1,6 +1,9 @@
 ﻿@inherits LayoutComponentBase
 
-<PageTitle>Changelog</PageTitle>
+@inject IOptions<BrandingOptions> _brandingOptions
+
+
+<PageTitle>@_brandingOptions.Value.Name</PageTitle>
 
 <div class="page">
     <div class="sidebar">

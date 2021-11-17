@@ -1,9 +1,10 @@
 ﻿@page "/project/{projectId:int}"
 
-@using Changelog.Data
 @inject ProjectService _projectService
+@inject IOptions<BrandingOptions> _brandingOptions
 
-<PageTitle>Todo @projectId</PageTitle>
+
+<PageTitle>@project?.Name | @_brandingOptions.Value.Name</PageTitle>
 
 @if (failedToLoad)
 {

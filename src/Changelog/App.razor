@@ -1,4 +1,4 @@
-﻿@using Changelog.Shared
+﻿@inject IOptions<BrandingOptions> _brandingOptions
 
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
@@ -13,7 +13,7 @@
         </Found>
 
         <NotFound>
-            <PageTitle>Not found</PageTitle>
+            <PageTitle>Not found | @_brandingOptions.Value.Name</PageTitle>
 
             <LayoutView Layout="@typeof(MainLayout)">
                 <p role="alert">Sorry, there's nothing at this address.</p>
