@@ -1,0 +1,49 @@
+﻿@page "/admin/project/{projectId:int}/release/new"
+@attribute [Authorize]
+
+@inject ReleaseService _releaseService
+@inject NavigationManager NavigationManager
+
+
+<EditForm EditContext="@EditContext" OnValidSubmit="CreateRelease">
+    <Changelog.Shared.EditForms.ReleaseEditForm release="@release" />
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</EditForm>
+
+<div class="my-3">
+    <h4>Preview (detailed)</h4>
+
+    <div style="padding: 32px; border: 1px solid black; border-radius: 4px;">
+        <ReleaseDetailed release="@release" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int projectId { get; set; }
+
+    private Release release { get; set; } = new Release();
+
+    private EditContext EditContext;
+
+    protected override void OnInitialized()
+    {
+        EditContext = new EditContext(release);
+        EditContext.OnFieldChanged += EditContext_OnFieldChanged;
+
+        base.OnInitialized();
+    }
+
+    private void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
+    {
+        StateHasChanged(); // To update preview
+    }
+
+    private void CreateRelease()
+    {
+        release.ProjectId = projectId;
+        _releaseService.CreateRelease(release);
+        NavigationManager.NavigateTo($"/admin/project/{projectId}", true);
+    }
+}

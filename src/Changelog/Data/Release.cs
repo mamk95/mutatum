@@ -47,6 +47,6 @@ namespace Changelog.Data
         [Range(1, 31)]
         public int ReleaseDay { get; set; }
 
-        public IList<Change>? Changes { get; set; }
+        public IList<Change> Changes { get; set; } = new List<Change>();
     }
 }

@@ -1,0 +1,91 @@
+﻿@inject ChangeTypeService _changeTypeService
+
+
+<div class="mb-3">
+    <label for="title" class="form-label">Title</label>
+
+    <InputText id="title" @bind-Value="release.Title" class="form-control" />
+</div>
+
+<div class="mb-3">
+    <label for="shortdesc" class="form-label">Short description</label>
+
+    <InputTextArea id="shortdesc" @bind-Value="release.ShortDescription" class="form-control" />
+</div>
+
+<div class="mb-3">
+    <label for="longdesc" class="form-label">Long description in markdown</label>
+
+    <InputTextArea id="longdesc" @bind-Value="release.LongDescriptionMarkdown" class="form-control" />
+</div>
+
+<label class="form-label">Version</label>
+<div class="input-group mb-3">
+    <span class="input-group-text">Major</span>
+    <InputNumber aria-label="Major" @bind-Value="release.Major" class="form-control" />
+
+    <span class="input-group-text">Minor</span>
+    <InputNumber aria-label="Minor" @bind-Value="release.Minor" class="form-control" />
+
+    <span class="input-group-text">Patch</span>
+    <InputNumber aria-label="Patch" @bind-Value="release.Patch" class="form-control" />
+</div>
+
+<label class="form-label">Release date</label>
+<div class="input-group mb-3">
+    <span class="input-group-text">Year</span>
+    <InputNumber aria-label="Year" @bind-Value="release.ReleaseYear" class="form-control" />
+
+    <span class="input-group-text">Month</span>
+    <InputNumber aria-label="Month" @bind-Value="release.ReleaseMonth" class="form-control" />
+
+    <span class="input-group-text">Day</span>
+    <InputNumber aria-label="Day" @bind-Value="release.ReleaseDay" class="form-control" />
+</div>
+
+<DataAnnotationsValidator />
+
+<ValidationSummary />
+
+<div class="mb-3 p-3" style="border: 1px solid black; border-radius: 12px;">
+    <h4>Changes</h4>
+
+    @for (var i = 0; i < release.Changes.Count; i++)
+    {
+        <hr />
+        <ChangeEdit @bind-change="release.Changes[i]" changeTypes="@changeTypes" />
+    }
+
+    <hr />
+
+    <button type="button" class="btn btn-link" @onclick="AddChange" style="text-decoration: none;">
+        <span class="oi oi-plus" aria-hidden="true"></span>
+        &nbsp;
+        Add change
+    </button>
+</div>
+
+@code {
+    [Parameter]
+    public Release release { get; set; }
+
+    private IList<ChangeType> changeTypes { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        changeTypes = _changeTypeService.GetChangeTypes();
+    }
+
+    private void AddChange()
+    {
+        release.Changes.Add(new Change
+            {
+                ReleaseId = release.Id,
+                Release = release,
+                ChangeTypeId = changeTypes.First().Id,
+                ChangeType = changeTypes.First(),
+            });
+    }
+}

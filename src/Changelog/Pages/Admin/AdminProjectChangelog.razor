@@ -24,6 +24,8 @@ else
         </a>
     </div>
 
+    <a href="@($"/admin/project/{projectId}/release/new")">Create new release</a>
+
     @if (project.Releases == null || project.Releases.Count < 1)
     {
         <div>No releases for this project</div>

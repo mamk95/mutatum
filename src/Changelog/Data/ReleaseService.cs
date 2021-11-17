@@ -20,6 +20,19 @@ namespace Changelog.Data
                 .FirstOrDefault();
         }
 
+        public Release CreateRelease(Release release)
+        {
+            if (release.Id != default)
+            {
+                throw new ArgumentException("Do not set the ID field", nameof(release));
+            }
+
+            var result = _context.Releases.Add(release).Entity;
+            _context.SaveChanges();
+
+            return result;
+        }
+
         public Release UpdateRelease(int id, Release release)
         {
             var originalRelease = _context.Releases.Find(id);
