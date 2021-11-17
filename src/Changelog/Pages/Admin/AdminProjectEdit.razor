@@ -41,7 +41,7 @@ else
 
     private void UpdateProject()
     {
-        _projectService.UpdateProject(projectId, project.Name, project.Description, project.Hidden);
+        _projectService.UpdateProject(projectId, project.Name, project.Description, project.Hidden, project.SortOrder);
         NavigationManager.NavigateTo("/admin/project", true);
     }
 }

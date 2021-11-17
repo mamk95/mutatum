@@ -14,7 +14,7 @@ namespace Changelog.Data
 
         public bool Hidden { get; set; } = false;
 
-        public int? SortOrder { get; set; } = int.MaxValue;
+        public int SortOrder { get; set; } = 99;
 
         public IList<Release>? Releases { get; set; }
     }

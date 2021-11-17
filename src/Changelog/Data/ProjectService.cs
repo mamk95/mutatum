@@ -32,13 +32,14 @@ namespace Changelog.Data
                 .FirstOrDefault();
         }
 
-        public Project AddProject(string name, string description, bool hidden)
+        public Project AddProject(string name, string description, bool hidden, int sortOrder)
         {
             var project = new Project
             {
                 Name = name,
                 Description = description,
                 Hidden = hidden,
+                SortOrder = sortOrder,
             };
 
             var result = _context.Projects.Add(project).Entity;
@@ -47,7 +48,7 @@ namespace Changelog.Data
             return result;
         }
 
-        public Project UpdateProject(int id, string name, string description, bool hidden)
+        public Project UpdateProject(int id, string name, string description, bool hidden, int sortOrder)
         {
             var project = _context.Projects.Find(id);
 
@@ -59,6 +60,7 @@ namespace Changelog.Data
             project.Name = name;
             project.Description = description;
             project.Hidden = hidden;
+            project.SortOrder = sortOrder;
 
             var result = _context.Projects.Update(project).Entity;
             _context.SaveChanges();
