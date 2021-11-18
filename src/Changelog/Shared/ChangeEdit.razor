@@ -10,10 +10,10 @@
     <div class="mb-3">
         <label for="type" class="form-label">Type</label>
 
-        <InputSelect id="type" @bind-Value="change.ChangeTypeId" class="form-control">
-            @foreach (var changeType in changeTypes)
+        <InputSelect id="type" @bind-Value="change.CategoryId" class="form-control">
+            @foreach (var category in categories)
             {
-                <option value="@changeType.Id">@changeType.Name</option>
+                <option value="@category.Id">@category.Name</option>
             }
         </InputSelect>
     </div>
@@ -37,7 +37,7 @@
     public EventCallback<Change> changeChanged { get; set; }
 
     [Parameter]
-    public IList<ChangeType> changeTypes { get; set; }
+    public IList<Category> categories { get; set; }
 
     private EditContext EditContext;
 
@@ -51,9 +51,9 @@
 
     private void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
     {
-        if (e.FieldIdentifier.FieldName == nameof(change.ChangeTypeId))
+        if (e.FieldIdentifier.FieldName == nameof(change.CategoryId))
         {
-            change.ChangeType = changeTypes.First(ct => ct.Id == change.ChangeTypeId);
+            change.Category = categories.First(ct => ct.Id == change.CategoryId);
         }
 
         changeChanged.InvokeAsync(change);

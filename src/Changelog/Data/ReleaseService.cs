@@ -16,7 +16,7 @@ namespace Changelog.Data
             return _context.Releases
                 .Where(r => r.Id == id)
                 .Include(r => r.Changes)
-                .ThenInclude(c => c.ChangeType)
+                .ThenInclude(c => c.Category)
                 .FirstOrDefault();
         }
 

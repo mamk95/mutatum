@@ -28,7 +28,7 @@ namespace Changelog.Data
                     .ThenByDescending(r => r.Minor)
                     .ThenByDescending(r => r.Patch))
                 .ThenInclude(r => r.Changes)
-                .ThenInclude(c => c.ChangeType)
+                .ThenInclude(c => c.Category)
                 .FirstOrDefault();
         }
 

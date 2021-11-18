@@ -10,7 +10,7 @@ public class SeedTestData
         var context = services.GetService<ApplicationDbContext>();
 
         await CreateAdminUser(context);
-        await CreateChangeTypes(context);
+        await CreateCategories(context);
         await CreateProjects(context);
         await CreateReleases(context);
         await CreateChanges(context);
@@ -59,11 +59,11 @@ public class SeedTestData
         await context.SaveChangesAsync();
     }
 
-    private static async Task CreateChangeTypes(ApplicationDbContext context)
+    private static async Task CreateCategories(ApplicationDbContext context)
     {
-        if (!context.ChangeTypes.Any())
+        if (!context.Categories.Any())
         {
-            await context.ChangeTypes.AddAsync(new ChangeType
+            await context.Categories.AddAsync(new Category
             {
                 Id = 1,
                 Name = "New",
@@ -71,7 +71,7 @@ public class SeedTestData
                 TextColor = "white",
             });
 
-            await context.ChangeTypes.AddAsync(new ChangeType
+            await context.Categories.AddAsync(new Category
             {
                 Id = 2,
                 Name = "Improved",
@@ -79,7 +79,7 @@ public class SeedTestData
                 TextColor = "white",
             });
 
-            await context.ChangeTypes.AddAsync(new ChangeType
+            await context.Categories.AddAsync(new Category
             {
                 Id = 3,
                 Name = "Fixed",
@@ -222,7 +222,7 @@ public class SeedTestData
             await context.Changes.AddAsync(new Change
             {
                 Id = id++,
-                ChangeTypeId = 3,
+                CategoryId = 3,
                 ReleaseId = 1,
                 Title = "Squashes bugs"
             });
@@ -230,7 +230,7 @@ public class SeedTestData
             await context.Changes.AddAsync(new Change
             {
                 Id = id++,
-                ChangeTypeId = 1,
+                CategoryId = 1,
                 ReleaseId = 1,
                 Title = "Added changelog",
                 Markdown = "Markdown here, *italic*, **bold**\n\n1. List item 1\n2. List item 2\n\n![The San Juan Mountains are beautiful!](https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Whatsapp_chatting_outdoor_20180808.jpg/320px-Whatsapp_chatting_outdoor_20180808.jpg)"
@@ -239,7 +239,7 @@ public class SeedTestData
             await context.Changes.AddAsync(new Change
             {
                 Id = id++,
-                ChangeTypeId = 1,
+                CategoryId = 1,
                 ReleaseId = 1,
                 Title = "Added tests"
             });
@@ -247,7 +247,7 @@ public class SeedTestData
             await context.Changes.AddAsync(new Change
             {
                 Id = id++,
-                ChangeTypeId = 3,
+                CategoryId = 3,
                 ReleaseId = 2,
                 Title = "Fixed bug"
             });
@@ -255,7 +255,7 @@ public class SeedTestData
             await context.Changes.AddAsync(new Change
             {
                 Id = id++,
-                ChangeTypeId = 2,
+                CategoryId = 2,
                 ReleaseId = 2,
                 Title = "Improved changelog"
             });
@@ -263,7 +263,7 @@ public class SeedTestData
             await context.Changes.AddAsync(new Change
             {
                 Id = id++,
-                ChangeTypeId = 3,
+                CategoryId = 3,
                 ReleaseId = 3,
                 Title = "Added users"
             });
@@ -271,7 +271,7 @@ public class SeedTestData
             await context.Changes.AddAsync(new Change
             {
                 Id = id++,
-                ChangeTypeId = 1,
+                CategoryId = 1,
                 ReleaseId = 4,
                 Title = "Init"
             });

@@ -24,7 +24,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuth
 { // Data services
     builder.Services.AddScoped<ProjectService>();
     builder.Services.AddScoped<ReleaseService>();
-    builder.Services.AddScoped<ChangeTypeService>();
+    builder.Services.AddScoped<CategoryService>();
 }
 
 { // Reading AppSettings options

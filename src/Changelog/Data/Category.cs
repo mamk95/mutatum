@@ -2,7 +2,7 @@
 
 namespace Changelog.Data
 {
-    public class ChangeType
+    public class Category
     {
         [Key]
         public int Id { get; set; }

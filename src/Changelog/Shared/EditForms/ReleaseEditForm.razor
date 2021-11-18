@@ -1,4 +1,4 @@
-﻿@inject ChangeTypeService _changeTypeService
+﻿@inject CategoryService _categoryService
 
 
 <div class="mb-3">
@@ -53,7 +53,7 @@
     @for (var i = 0; i < release.Changes.Count; i++)
     {
         <hr />
-        <ChangeEdit @bind-change="release.Changes[i]" changeTypes="@changeTypes" />
+        <ChangeEdit @bind-change="release.Changes[i]" categories="@categories" />
     }
 
     <hr />
@@ -69,13 +69,13 @@
     [Parameter]
     public Release release { get; set; }
 
-    private IList<ChangeType> changeTypes { get; set; }
+    private IList<Category> categories { get; set; }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        changeTypes = _changeTypeService.GetChangeTypes();
+        categories = _categoryService.GetCategories();
     }
 
     private void AddChange()
@@ -84,8 +84,8 @@
             {
                 ReleaseId = release.Id,
                 Release = release,
-                ChangeTypeId = changeTypes.First().Id,
-                ChangeType = changeTypes.First(),
+                CategoryId = categories.First().Id,
+                Category = categories.First(),
             });
     }
 }

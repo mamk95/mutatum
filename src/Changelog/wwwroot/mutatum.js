@@ -61,27 +61,27 @@ class Mutatum {
         // new..red..green        { name: "bar", backgroundColor: red, textColor: green, count: 2}
         // ---------------------------------
         // Reason for key naming choice: Wants to separate not only on text/name content, but also colors
-        const changeTypeCountDictionary = {};
+        const categoryCountDictionary = {};
         for (var change of release.changes) {
-            const dictKey = `${change.changeType.name}..${change.changeType.backgroundColor}..${change.changeType.textColor}`;
-            const existingValue = changeTypeCountDictionary[dictKey];
+            const dictKey = `${change.category.name}..${change.category.backgroundColor}..${change.category.textColor}`;
+            const existingValue = categoryCountDictionary[dictKey];
             if (existingValue != null) {
                 existingValue.count++;
             } else {
-                changeTypeCountDictionary[dictKey] = {
-                    name: change.changeType.name,
-                    backgroundColor: change.changeType.backgroundColor,
-                    textColor: change.changeType.textColor,
+                categoryCountDictionary[dictKey] = {
+                    name: change.category.name,
+                    backgroundColor: change.category.backgroundColor,
+                    textColor: change.category.textColor,
                     count: 1
                 };
             }
         }
 
-        for (var changeTypeCount of Object.values(changeTypeCountDictionary)) {
+        for (var categoryCount of Object.values(categoryCountDictionary)) {
             const change = document.createElement('span');
             change.className = "mutatum--release-change";
-            change.style = `background-color: ${changeTypeCount.backgroundColor}; color: ${changeTypeCount.textColor};`;
-            change.appendChild(document.createTextNode(`${changeTypeCount.count}x ${changeTypeCount.name}`));
+            change.style = `background-color: ${categoryCount.backgroundColor}; color: ${categoryCount.textColor};`;
+            change.appendChild(document.createTextNode(`${categoryCount.count}x ${categoryCount.name}`));
             changes.appendChild(change);
         }
 

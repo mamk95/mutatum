@@ -12,7 +12,7 @@ namespace Changelog.Data
 
         public DbSet<Change> Changes { get; set; }
 
-        public DbSet<ChangeType> ChangeTypes { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

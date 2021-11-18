@@ -9,10 +9,10 @@ namespace Changelog.Data
         public int Id { get; set; }
 
         [Required]
-        [ForeignKey(nameof(ChangeType))]
-        public int ChangeTypeId { get; set; }
+        [ForeignKey(nameof(Category))]
+        public int CategoryId { get; set; }
 
-        public ChangeType ChangeType { get; set; }
+        public Category Category { get; set; }
 
         [Required]
         [ForeignKey(nameof(Release))]
