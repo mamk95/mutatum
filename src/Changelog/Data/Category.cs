@@ -21,5 +21,7 @@ namespace Changelog.Data
         /// </summary>
         [Required]
         public string TextColor { get; set; }
+
+        public IList<Change> Changes { get; set; }
     }
 }

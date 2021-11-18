@@ -1,0 +1,25 @@
+﻿@page "/admin/category/new"
+@attribute [Authorize]
+
+@using Changelog.Data
+@inject CategoryService _categoryService
+@inject NavigationManager NavigationManager
+
+
+<h3>New category</h3>
+
+<EditForm Model="category" OnValidSubmit="CreateCategory">
+    <Changelog.Shared.EditForms.CategoryEditForm category="@category" />
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</EditForm>
+
+@code {
+    private Category category { get; set; } = new Category();
+
+    private void CreateCategory()
+    {
+        _categoryService.AddCategory(category.Name, category.BackgroundColor, category.TextColor);
+        NavigationManager.NavigateTo("/admin/category", true);
+    }
+}

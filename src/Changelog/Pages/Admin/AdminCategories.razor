@@ -1,0 +1,79 @@
+﻿@page "/admin/category"
+@attribute [Authorize]
+
+@inject CategoryService _categoryService
+@inject IJSRuntime JsRuntime
+@inject NavigationManager NavigationManager
+
+<h3>Categories</h3>
+
+@if (categories == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <a href="/admin/category/new">Create new category</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Text color</th>
+                <th>Background color</th>
+                <th>Related changes</th>
+                <th style="width: 80px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in categories)
+            {
+                <tr>
+                    <td>@category.Id</td>
+                    <td>@category.Name</td>
+                    <td><span style="display: inline-block; height: 14px; width: 14px; border-radius: 50%; background-color: @category.TextColor; border: 1px dotted @category.BackgroundColor; margin-right: 8px;"></span>@category.TextColor</td>
+                    <td><span style="display: inline-block; height: 14px; width: 14px; border-radius: 50%; background-color: @category.BackgroundColor;  border: 1px dotted @category.TextColor; margin-right: 8px;"></span>@category.BackgroundColor</td>
+                    <td>@category.Changes.Count</td>
+                    <td>
+                        <a aria-label="Edit" class="mx-2" href="@($"/admin/category/{@category.Id}/edit")">
+                            <span class="oi oi-pencil" aria-hidden="true"></span>
+                        </a>
+
+                        <a role="button" aria-label="Delete" @onclick="() => DeleteCategory(category.Id)">
+                            <span class="oi oi-trash" aria-hidden="true"></span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IList<Category> categories { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = _categoryService.GetCategoriesWithRelatedChanges();
+    }
+
+    private async Task DeleteCategory(int id)
+    {
+        var category = categories.FirstOrDefault(c => c.Id == id);
+
+        if (category?.Changes?.Count > 0)
+        {
+            await JsRuntime.InvokeVoidAsync("alert", $"Cannot delete a category with assigned changes. This category has {category.Changes.Count} changes.");
+            return;
+        }
+
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete the category with ID={id}?");
+
+        if (confirmed)
+        {
+            _categoryService.DeleteCategoryById(id);
+            NavigationManager.NavigateTo(NavigationManager.Uri, true); // Reload page to update everything in the UI
+        }
+    }
+}

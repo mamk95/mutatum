@@ -1,0 +1,47 @@
+﻿@page "/admin/category/{categoryId:int}/edit"
+@attribute [Authorize]
+
+@using Changelog.Data
+@inject CategoryService _categoryService
+@inject NavigationManager NavigationManager
+
+
+<h3>Edit category</h3>
+
+@if (failedToLoad)
+{
+    <div>Failed to load the category. Try again later.</div>
+}
+else
+{
+    <EditForm Model="category" OnValidSubmit="UpdateCategory">
+        <Changelog.Shared.EditForms.CategoryEditForm category="@category" />
+
+        <button type="submit" class="btn btn-primary">Update</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int categoryId { get; set; }
+
+    private Category category { get; set; }
+
+    private bool failedToLoad { get; set; } = false;
+
+    protected override void OnParametersSet()
+    {
+        category = _categoryService.GetCategoryById(categoryId);
+
+        if (category == null)
+        {
+            failedToLoad = true;
+        }
+    }
+
+    private void UpdateCategory()
+    {
+        _categoryService.UpdateCategory(categoryId, category.Name, category.BackgroundColor, category.TextColor);
+        NavigationManager.NavigateTo("/admin/category", true);
+    }
+}

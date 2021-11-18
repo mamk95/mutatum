@@ -1,0 +1,26 @@
+﻿<div>
+    <label for="name" class="form-label">Name</label>
+
+    <InputText id="name" @bind-Value="category.Name" class="form-control" />
+</div>
+
+<div>
+    <label for="bgcolor" class="form-label">Background color</label>
+
+    <InputText id="bgcolor" @bind-Value="category.BackgroundColor" class="form-control" />
+</div>
+
+<div>
+    <label for="textcolor" class="form-label">Text color</label>
+
+    <InputText id="textcolor" @bind-Value="category.TextColor" class="form-control" />
+</div>
+
+<DataAnnotationsValidator />
+
+<ValidationSummary />
+
+@code {
+    [Parameter]
+    public Category category { get; set; }
+}
