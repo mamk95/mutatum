@@ -12,6 +12,11 @@
         display: block !important;
     }
 
+    .mutatum--popover:empty::before {
+        content: "Loading...";
+        animation: loading 1s linear infinite;
+    }
+
 .mutatum--heading {
     font-size: 22px;
     font-weight: bold;
@@ -74,4 +79,23 @@
 .mutatum--show-more {
     text-decoration: none;
     color: rgb(0, 102, 204);
+}
+
+
+@keyframes loading {
+    0% {
+        content: 'Loading';
+    }
+
+    33% {
+        content: 'Loading.';
+    }
+
+    66% {
+        content: 'Loading..';
+    }
+
+    100% {
+        content: 'Loading...';
+    }
 }
