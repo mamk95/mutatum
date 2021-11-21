@@ -1,18 +1,44 @@
-﻿@using Changelog.Data
-
-<div>
+﻿<div>
     <span style="padding: 4px; background-color: @change.Category.BackgroundColor; color: @change.Category.TextColor; border-radius: 4px;">@change.Category.Name</span>
     <span style="font-size: 18px; font-weight: bold;">@change.Title</span>
 </div>
 
 @if (!string.IsNullOrEmpty(change.Markdown))
 {
-    <div style="margin-top: 8px; margin-left: 12px; border-left: 2px solid #dadada; padding: 12px;">
-        <MarkdownDisplay markdown="@change.Markdown" />
+    <div class="change-description @(LimitDescriptionWithReadMoreButton ? "collapsed-fade" : "" )">
+        @if (LimitDescriptionWithReadMoreButton)
+        {
+            <!--
+                This is a hacky way of removing the CSS class "collapsed-fade" if it is not needed.
+                The <img> will cause an error because of the empty src attribute. That will check if the markdown content is bigger than
+                the height set by "collapsed-fade". If it is not bigger, it's a short description/markdown and do not need "read more".
+            -->
+
+            <img src="" class="d-none" onerror="if (!isOverflown(this.parentElement)) this.parentElement.classList.remove('collapsed-fade');">
+        }
+
+        <MarkdownDisplay markdown="@change.Markdown" RemoveLastMarginBottom="@true" />
+
+        <div class="read-more">
+            <a role="button" @onclick="ShowDescription">
+                <span class="oi oi-chevron-bottom"></span>
+                Read more
+                <span class="oi oi-chevron-bottom"></span>
+            </a>
+        </div>
     </div>
 }
 
 @code {
     [Parameter]
     public Change change { get; set; }
+
+    [Parameter]
+    public bool LimitDescriptionWithReadMoreButton { get; set; } = true;
+
+    public void ShowDescription()
+    {
+        LimitDescriptionWithReadMoreButton = false;
+        StateHasChanged();
+    }
 }

@@ -5,4 +5,14 @@
     Layout = "_Layout";
 }
 
+<script type="text/javascript">
+    /**
+     * Returns true if the content of an element overflows the element.
+     * Example: CSS "height: 100px; overflow: hidden;" with content of more than 100px height.
+     */
+    function isOverflown(element) {
+        return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+    }
+</script>
+
 <component type="typeof(App)" render-mode="ServerPrerendered" />
