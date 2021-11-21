@@ -1,0 +1,7 @@
+﻿.markdown-max-width ::deep * {
+    max-width: 100%;
+}
+
+.remove-last-margin-bottom ::deep > *:last-child {
+    margin-bottom: 0;
+}

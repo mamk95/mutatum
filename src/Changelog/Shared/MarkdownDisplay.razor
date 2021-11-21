@@ -1,12 +1,15 @@
 ﻿@using Markdig;
 
-<div class="markdown-max-width">
+<div class="markdown-max-width @(RemoveLastMarginBottom ? "remove-last-margin-bottom" : "")">
     @((MarkupString) markdownAsHtml)
 </div>
 
 @code {
     [Parameter]
     public string markdown { get; set; }
+
+    [Parameter]
+    public bool RemoveLastMarginBottom { get; set; } = false;
 
     private string markdownAsHtml { get; set; }
 
@@ -18,9 +21,3 @@
             markdownAsHtml = Markdown.ToHtml(markdown);
     }
 }
-
-<style>
-    .markdown-max-width * {
-        max-width: 100%;
-    }
-</style>
