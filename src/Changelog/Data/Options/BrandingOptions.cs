@@ -1,4 +1,4 @@
-﻿namespace Changelog.Data
+﻿namespace Changelog.Data.Options
 {
     public class BrandingOptions
     {

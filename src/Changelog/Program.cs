@@ -1,6 +1,7 @@
 using Blazor.Polyfill.Server;
 using Changelog.Areas.Identity;
 using Changelog.Data;
+using Changelog.Data.Options;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -30,6 +31,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuth
 
 { // Reading AppSettings options
     builder.Services.Configure<BrandingOptions>(builder.Configuration.GetSection(BrandingOptions.AppsettingsSectionName));
+    builder.Services.Configure<FirstRunOptions>(builder.Configuration.GetSection(FirstRunOptions.AppsettingsSectionName));
 }
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>

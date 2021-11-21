@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Changelog.Data.Options;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Changelog.Data;
 
@@ -9,15 +11,25 @@ public class SeedTestData
     {
         var context = services.GetService<ApplicationDbContext>();
 
-        await CreateAdminUser(context);
-        await CreateCategories(context);
-        await CreateProjects(context);
-        await CreateReleases(context);
-        await CreateChanges(context);
+        var firstRunConfig = services.GetService<IOptions<FirstRunOptions>>();
+        if (firstRunConfig == null) return;
+
+        await CreateAdminUser(context, firstRunConfig.Value.AdminEmail, firstRunConfig.Value.AdminPassword);
+
+        if (firstRunConfig.Value.SeedWithTestDataBool)
+        {
+            await CreateCategories(context);
+            await CreateProjects(context);
+            await CreateReleases(context);
+            await CreateChanges(context);
+        }
     }
 
-    private static async Task CreateAdminUser(ApplicationDbContext context)
+    private static async Task CreateAdminUser(ApplicationDbContext context, string adminEmail, string adminPassword)
     {
+        if (string.IsNullOrEmpty(adminEmail) || string.IsNullOrEmpty(adminPassword))
+            return;
+
         // any unique string id
         const string ADMIN_ID = "5d1c46d4-79f1-4972-906d-b4d1140ca64a";
         const string ROLE_ID = "67f34fe4-22b8-4a4f-a641-8aa13a81ad1f";
@@ -40,15 +52,15 @@ public class SeedTestData
             var user = new IdentityUser
             {
                 Id = ADMIN_ID,
-                UserName = "admin@admin.com",
-                NormalizedUserName = "admin@admin.com".ToUpper(), // This is used as the "Email input" when logging in. Must be upper case
-                Email = "admin@admin.com",
-                NormalizedEmail = "admin@admin.com".ToUpper(),
+                UserName = adminEmail,
+                NormalizedUserName = adminEmail.ToUpper(), // This is used as the "Email input" when logging in. Must be upper case
+                Email = adminEmail,
+                NormalizedEmail = adminEmail.ToUpper(),
                 EmailConfirmed = true,
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
 
-            user.PasswordHash = hasher.HashPassword(user, "Admin123!");
+            user.PasswordHash = hasher.HashPassword(user, adminPassword);
 
             var userStore = new UserStore<IdentityUser>(context);
             await userStore.CreateAsync(user);
