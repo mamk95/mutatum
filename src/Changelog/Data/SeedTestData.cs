@@ -177,7 +177,7 @@ public class SeedTestData
                 Minor = 0,
                 Patch = 1,
                 ReleaseYear = 2021,
-                ReleaseMonth = 12,
+                ReleaseMonth = 11,
                 ReleaseDay = 14,
             });
 
@@ -192,7 +192,7 @@ public class SeedTestData
                 Minor = 1,
                 Patch = 0,
                 ReleaseYear = 2021,
-                ReleaseMonth = 11,
+                ReleaseMonth = 12,
                 ReleaseDay = 23,
             });
 
@@ -224,7 +224,8 @@ public class SeedTestData
                 Id = id++,
                 CategoryId = 3,
                 ReleaseId = 1,
-                Title = "Squashes bugs"
+                Title = "Squashes bugs",
+                Markdown = "**bold text**"
             });
 
             await context.Changes.AddAsync(new Change
@@ -241,7 +242,8 @@ public class SeedTestData
                 Id = id++,
                 CategoryId = 1,
                 ReleaseId = 1,
-                Title = "Added tests"
+                Title = "Added tests",
+                Markdown = "*italic text*"
             });
 
             await context.Changes.AddAsync(new Change
