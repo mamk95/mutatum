@@ -1,0 +1,22 @@
+{
+  "name": "mutatum-cypress-tests",
+  "version": "1.0.0",
+  "description": "Cypress tests for the Mutatum project",
+  "main": "index.js",
+  "scripts": {
+    "cypress:open": "cypress open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mamk95/mutatum.git"
+  },
+  "author": "Magnus Karlsen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mamk95/mutatum/issues"
+  },
+  "homepage": "https://github.com/mamk95/mutatum#readme",
+  "devDependencies": {
+    "cypress": "^9.0.0"
+  }
+}
