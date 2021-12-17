@@ -6,10 +6,8 @@
   "scripts": {
     "cypress:open": "cypress open",
     "cypress:open:mobile": "cypress open --config viewportWidth=375,viewportHeight=667",
-    "cypress:run": "cypress run",
     "cypress:run:firefox": "cypress run --browser firefox --spec 'cypress/tests/ui/*'",
     "cypress:run:chrome": "cypress run --browser chrome --spec 'cypress/tests/ui/*'",
-    "cypress:run:mobile": "cypress run --config viewportWidth=375,viewportHeight=667",
     "cypress:run:mobile:firefox": "cypress run --browser firefox --spec 'cypress/tests/ui/*' --config viewportWidth=375,viewportHeight=667",
     "cypress:run:mobile:chrome": "cypress run --browser chrome --spec 'cypress/tests/ui/*' --config viewportWidth=375,viewportHeight=667"
   },
