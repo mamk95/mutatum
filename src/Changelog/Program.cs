@@ -1,4 +1,3 @@
-using Blazor.Polyfill.Server;
 using Changelog.Areas.Identity;
 using Changelog.Data;
 using Changelog.Data.Options;
@@ -43,8 +42,6 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: "AllowAnyOrigin", builder => builder.AllowAnyOrigin());
 });
 
-builder.Services.AddBlazorPolyfill();
-
 var app = builder.Build();
 
 await SeedTestData.Seed(app.Services.CreateScope().ServiceProvider);
@@ -63,7 +60,6 @@ else
 
 app.UseHttpsRedirection();
 
-app.UseBlazorPolyfill();
 app.UseStaticFiles();
 
 app.UseRouting();
