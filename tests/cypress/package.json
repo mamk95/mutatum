@@ -4,12 +4,13 @@
   "description": "Cypress tests for the Mutatum project",
   "main": "index.js",
   "scripts": {
-    "cypress:open": "cypress open",
+    "cypress:open:desktop": "cypress open --config viewportWidth=1920,viewportHeight=1080",
     "cypress:open:mobile": "cypress open --config viewportWidth=375,viewportHeight=667",
-    "cypress:run:firefox": "cypress run --browser firefox --spec 'cypress/tests/ui/*'",
-    "cypress:run:chrome": "cypress run --browser chrome --spec 'cypress/tests/ui/*'",
-    "cypress:run:mobile:firefox": "cypress run --browser firefox --spec 'cypress/tests/ui/*' --config viewportWidth=375,viewportHeight=667",
-    "cypress:run:mobile:chrome": "cypress run --browser chrome --spec 'cypress/tests/ui/*' --config viewportWidth=375,viewportHeight=667"
+    "cypress:run:api": "cypress run --browser firefox --spec 'cypress/tests/api/*'",
+    "cypress:run:ui:desktop:firefox": "cypress run --browser firefox --spec 'cypress/tests/ui/*' --config viewportWidth=1920,viewportHeight=1080",
+    "cypress:run:ui:desktop:chrome": "cypress run --browser chrome --spec 'cypress/tests/ui/*' --config viewportWidth=1920,viewportHeight=1080",
+    "cypress:run:ui:mobile:firefox": "cypress run --browser firefox --spec 'cypress/tests/ui/*' --config viewportWidth=375,viewportHeight=667",
+    "cypress:run:ui:mobile:chrome": "cypress run --browser chrome --spec 'cypress/tests/ui/*' --config viewportWidth=375,viewportHeight=667"
   },
   "repository": {
     "type": "git",
