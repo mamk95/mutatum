@@ -63,7 +63,7 @@
 
         if (!user.Identity.IsAuthenticated)
         {
-            JsRuntime.InvokeAsync<bool>("alert", "You do not have permission to delete this release!");
+            await JsRuntime.InvokeVoidAsync("alert", "You do not have permission to delete this release!");
             return;
         }
 
