@@ -39,7 +39,7 @@ else
                             <span class="oi oi-pencil" aria-hidden="true"></span>
                         </a>
 
-                        <a role="button" aria-label="Delete" @onclick="() => DeleteProject(project.Id)">
+                        <a role="button" aria-label="Delete" @onclick="() => { projectToDelete = project; deleteModal.Open(); }">
                             <span class="oi oi-trash" aria-hidden="true"></span>
                         </a>
                     </td>
@@ -47,24 +47,40 @@ else
             }
         </tbody>
     </table>
+
+    <Modal @ref="deleteModal">
+        <Title>Delete project?</Title>
+        <Body>
+            <p>
+                Do you want to delete the selected project?
+                <br />
+                <b>ID:</b> @projectToDelete?.Id
+                <br />
+                <b>Name:</b> @projectToDelete?.Name
+            </p>
+        </Body>
+        <Footer>
+            <button type="button" class="btn btn-danger" @onclick="() => DeleteProject(projectToDelete.Id)">Delete</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => deleteModal.Close()">Cancel</button>
+        </Footer>
+    </Modal>
 }
 
 @code {
     private IList<Project> projects { get; set; }
+
+    private Modal deleteModal { get; set; }
+
+    private Project projectToDelete { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         projects = _projectService.GetProjects();
     }
 
-    private async Task DeleteProject(int id)
+    private void DeleteProject(int id)
     {
-        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete the project with ID={id}?");
-
-        if (confirmed)
-        {
-            _projectService.DeleteProjectById(id);
-            NavigationManager.NavigateTo(NavigationManager.Uri, true); // Reload page to update e.g. navbar
-        }
+        _projectService.DeleteProjectById(id);
+        NavigationManager.NavigateTo(NavigationManager.Uri, true); // Reload page to update e.g. navbar
     }
 }
