@@ -19,7 +19,7 @@
     </div>
 
     <div class="mb-3">
-        <label for="markdown" class="form-label">Markdown</label>
+        <label for="markdown" class="form-label">Description (markdown)</label>
 
         <InputTextArea id="markdown" @bind-Value="change.Markdown" class="form-control" />
     </div>
@@ -30,6 +30,8 @@
 </EditForm>
 
 @code {
+    [Inject] IJSRuntime JSRuntime { get; set; }
+
     [Parameter]
     public Change change { get; set; }
 
@@ -47,6 +49,16 @@
         EditContext.OnFieldChanged += EditContext_OnFieldChanged;
 
         base.OnInitialized();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Coverts the description <textarea> into a markdown editor
+            await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/easymde.2.15.0.min.js").AsTask();
+            await JSRuntime.InvokeVoidAsync("textareaIdToMarkdownEditor", "markdown");
+        }
     }
 
     private void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)

@@ -14,7 +14,7 @@
 </div>
 
 <div class="mb-3">
-    <label for="longdesc" class="form-label">Long description in markdown</label>
+    <label for="longdesc" class="form-label">Long description (markdown)</label>
 
     <InputTextArea id="longdesc" @bind-Value="release.LongDescriptionMarkdown" class="form-control" />
 </div>
@@ -66,10 +66,22 @@
 </div>
 
 @code {
+    [Inject] IJSRuntime JSRuntime { get; set; }
+
     [Parameter]
     public Release release { get; set; }
 
     private IList<Category> categories { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Coverts the long description <textarea> into a markdown editor
+            await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/easymde.2.15.0.min.js").AsTask();
+            await JSRuntime.InvokeVoidAsync("textareaIdToMarkdownEditor", "longdesc");
+        }
+    }
 
     protected override void OnInitialized()
     {

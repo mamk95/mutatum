@@ -13,6 +13,22 @@
     function isOverflown(element) {
         return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
     }
+
+    /**
+     * Turns the <textarea> with the given ID into a markdown editor.
+     */
+    function textareaIdToMarkdownEditor(textareaId) {
+        const textareaElement = document.getElementById(textareaId);
+        const easyMDE = new EasyMDE({
+            element: textareaElement,
+            spellChecker: false,
+        });
+
+        easyMDE.codemirror.on("change", () => {
+            textareaElement.value = easyMDE.value();
+            textareaElement.dispatchEvent(new Event('change')); // Blazor will not update bind variable unless change event is triggered
+        });
+    }
 </script>
 
 <component type="typeof(App)" render-mode="ServerPrerendered" />
