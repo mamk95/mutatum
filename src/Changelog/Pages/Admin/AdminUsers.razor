@@ -1,0 +1,173 @@
+﻿@page "/admin/user"
+@attribute [Authorize]
+
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+
+<h3>Users</h3>
+
+<h4>You</h4>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Username</th>
+            <th>Lockout end</th>
+            <th>Account activated</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@CurrentUser?.Id</td>
+            <td>@CurrentUser?.UserName</td>
+            <td>
+                @(CurrentUser?.LockoutEnd != null && CurrentUser?.LockoutEnd > DateTime.Now // LockoutEnd is set, and is not in the past
+                ? CurrentUser.LockoutEnd.ToString()
+                : "Not locked")
+            </td>
+            <td>@CurrentUser?.EmailConfirmed</td>
+            <td><a href="Identity/Account/Manage">Manage account</a></td>
+        </tr>
+    </tbody>
+</table>
+
+<hr />
+
+<h4>Users</h4>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Username</th>
+            <th>Lockout end</th>
+            <th>Account activated</th>
+            <th style="width: 40px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in ConfirmedUsers)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.UserName</td>
+                <td>
+                    @(CurrentUser?.LockoutEnd != null && CurrentUser?.LockoutEnd > DateTime.Now // LockoutEnd is set, and is not in the past
+                ? CurrentUser.LockoutEnd.ToString()
+                : "Not locked")
+                </td>
+                <td>@user.EmailConfirmed</td>
+                <td>
+                    <a role="button" aria-label="Delete" @onclick="() => { userToDelete = user; deleteModal.Open(); }">
+                        <span class="oi oi-trash" aria-hidden="true"></span>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+<hr />
+
+<h4>Needs approval</h4>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Username</th>
+            <th>Account activated</th>
+            <th></th>
+            <th style="width: 40px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in UnconfirmedUsers)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.UserName</td>
+                <td>@user.EmailConfirmed</td>
+                <td>
+                    <a role="button" @onclick="() => ActivateUser(user)" href="javascript:void(0)">
+                        Click to activate
+                    </a>
+                </td>
+                <td>
+                    <a role="button" aria-label="Delete" @onclick="() => { userToDelete = user; deleteModal.Open(); }">
+                        <span class="oi oi-trash" aria-hidden="true"></span>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<Modal @ref="deleteModal">
+    <Title>Delete user?</Title>
+    <Body>
+        <p>
+            Do you want to delete the selected user?
+            <br />
+            <b>ID:</b> @userToDelete?.Id
+            <br />
+            <b>Username:</b> @userToDelete?.UserName
+        </p>
+    </Body>
+    <Footer>
+        <button type="button" class="btn btn-danger" @onclick="() => DeleteUser(userToDelete)">Delete</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => deleteModal.Close()">Cancel</button>
+    </Footer>
+</Modal>
+
+@code {
+    [Inject] UserManager<IdentityUser> _userManager { get; set; }
+    [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
+    [Inject] NavigationManager NavigationManager { get; set; }
+    [Inject] IJSRuntime JsRuntime { get; set; }
+
+    private Modal deleteModal { get; set; }
+
+    private IdentityUser userToDelete { get; set; }
+
+    private IEnumerable<IdentityUser> AllUsers => _userManager.Users;
+    private IEnumerable<IdentityUser> ConfirmedUsers => AllUsers.Where(u => u.EmailConfirmed);
+    private IEnumerable<IdentityUser> UnconfirmedUsers => AllUsers.Where(u => !u.EmailConfirmed);
+
+    private IdentityUser CurrentUser { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        var authstate = await _authenticationStateProvider.GetAuthenticationStateAsync();
+        CurrentUser = AllUsers.FirstOrDefault(u => u.UserName == authstate.User.Identity.Name);
+
+        if (CurrentUser == null) // CurrentUser might be null if another user has deleted this user
+        {
+            throw new UnauthorizedAccessException("Unable to find you in the user database.");
+        }
+    }
+
+    private async Task ActivateUser(IdentityUser user)
+    {
+        await _userManager.ConfirmEmailAsync(user, await _userManager.GenerateEmailConfirmationTokenAsync(user));
+        NavigationManager.NavigateTo(NavigationManager.Uri, true); // Reload page to update everything in the UI
+    }
+
+    private async Task DeleteUser(IdentityUser user)
+    {
+        if (user.Id == CurrentUser.Id)
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "You cannot delete your own account.");
+            return;
+        }
+
+        await _userManager.DeleteAsync(user);
+        NavigationManager.NavigateTo(NavigationManager.Uri, true); // Reload page to update everything in the UI
+
+
+    }
+}

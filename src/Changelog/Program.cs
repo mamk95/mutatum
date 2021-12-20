@@ -16,7 +16,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("Changelog"));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services
-    .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddDefaultIdentity<IdentityUser>(options =>
+    {
+        // We use this to block new users access without an existing user/admin confirming the account first
+        options.SignIn.RequireConfirmedAccount = true; // true = users without a confirmed account/email cannot login
+
+        // This will enable a temporary lockout if the wrong password is provided too many times
+        options.Lockout.AllowedForNewUsers = true;
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+        options.Lockout.MaxFailedAccessAttempts = 4;
+    })
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();

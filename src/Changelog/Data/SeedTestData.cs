@@ -57,7 +57,8 @@ public class SeedTestData
                 Email = adminEmail,
                 NormalizedEmail = adminEmail.ToUpper(),
                 EmailConfirmed = true,
-                SecurityStamp = Guid.NewGuid().ToString("D")
+                SecurityStamp = Guid.NewGuid().ToString("D"),
+                LockoutEnabled = true, // Will teporarily lock the account if the wrong password is given too many times
             };
 
             user.PasswordHash = hasher.HashPassword(user, adminPassword);
