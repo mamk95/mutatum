@@ -9,26 +9,35 @@ Cypress.Commands.add('waitToAvoidDetachedElements', () => {
     cy.wait(900);
 });
 
-Cypress.Commands.add('login', () => {
+/**
+ * If no username or password is given as arguments,
+ * it will read the username and password from the environment variables.
+ * 
+ * If forceLogin is true, this command will always run the login process,
+ * even if you are already logged in.
+ * 
+ * If verifyLoginStatus is true, this command will fail if the login failed.
+ */
+Cypress.Commands.add('login', (username, password, forceLogin = false, verifyLoginStatus = true) => {
 
     cy.getCookie('.AspNetCore.Identity.Application').then((cookie) => {
-        if (cookie == null) {
+        if (forceLogin || cookie == null) {
             cy.visit('/Identity/Account/Login?returnUrl=/admin/project');
 
-            if (Cypress.env('ADMIN_EMAIL') == null) {
+            if (username == null && Cypress.env('ADMIN_EMAIL') == null) {
                 throw new Error("Admin email is missing. Please set it in the environment variables!");
             }
 
-            if (Cypress.env('ADMIN_PASSWORD') == null) {
+            if (password == null && Cypress.env('ADMIN_PASSWORD') == null) {
                 throw new Error("Admin password is missing. Please set it in the environment variables!");
             }
 
-            cy.get('#Input_Email').type(Cypress.env('ADMIN_EMAIL'));
-            cy.get('#Input_Password').type(`${Cypress.env('ADMIN_PASSWORD')}{enter}`, { log: false }); // "Enter" to submit form
+            cy.get('#Input_Email').type(username ?? Cypress.env('ADMIN_EMAIL'), { delay: 0 });
+            cy.get('#Input_Password').type(`${password ?? Cypress.env('ADMIN_PASSWORD')}{enter}`, { log: false, delay: 0 }); // "Enter" to submit form
 
-
-
-            cy.url().should('eq', `${Cypress.config('baseUrl')}/admin/project`);
+            if (verifyLoginStatus) {
+                cy.url().should('eq', `${Cypress.config('baseUrl')}/admin/project`);
+            }
         } else {
             cy.log('Already logged in');
         }

@@ -8,10 +8,6 @@ describe('Project', () => {
     cy.deleteAllTestProjects();
   });
 
-  beforeEach(() => {
-    cy.visit('/');
-  });
-
   it('can add a project', () => {
     const projectName = `Cypress name ** ${new Date().getTime()}`;
     const projectDesc = `Cypress desc ${new Date().getTime() + 1}`;
