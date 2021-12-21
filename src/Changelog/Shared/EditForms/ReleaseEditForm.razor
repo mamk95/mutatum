@@ -22,25 +22,25 @@
 <label class="form-label">Version</label>
 <div class="input-group mb-3">
     <span class="input-group-text">Major</span>
-    <InputNumber aria-label="Major" @bind-Value="release.Major" class="form-control" />
+    <InputNumber id="version-major" aria-label="Major" @bind-Value="release.Major" class="form-control" />
 
     <span class="input-group-text">Minor</span>
-    <InputNumber aria-label="Minor" @bind-Value="release.Minor" class="form-control" />
+    <InputNumber id="version-minor" aria-label="Minor" @bind-Value="release.Minor" class="form-control" />
 
     <span class="input-group-text">Patch</span>
-    <InputNumber aria-label="Patch" @bind-Value="release.Patch" class="form-control" />
+    <InputNumber id="version-patch" aria-label="Patch" @bind-Value="release.Patch" class="form-control" />
 </div>
 
 <label class="form-label">Release date</label>
 <div class="input-group mb-3">
     <span class="input-group-text">Year</span>
-    <InputNumber aria-label="Year" @bind-Value="release.ReleaseYear" class="form-control" />
+    <InputNumber id="release-date-year" aria-label="Year" @bind-Value="release.ReleaseYear" class="form-control" />
 
     <span class="input-group-text">Month</span>
-    <InputNumber aria-label="Month" @bind-Value="release.ReleaseMonth" class="form-control" />
+    <InputNumber id="release-date-month" aria-label="Month" @bind-Value="release.ReleaseMonth" class="form-control" />
 
     <span class="input-group-text">Day</span>
-    <InputNumber aria-label="Day" @bind-Value="release.ReleaseDay" class="form-control" />
+    <InputNumber id="release-date-day" aria-label="Day" @bind-Value="release.ReleaseDay" class="form-control" />
 </div>
 
 <DataAnnotationsValidator />
