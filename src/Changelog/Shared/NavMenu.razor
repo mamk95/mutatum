@@ -45,10 +45,15 @@
                     {
                         <div class="nav-item px-3">
                             <NavLink class="nav-link" href="@($"admin/project/{project.Id}")">
-                                <span class="oi oi-list" aria-hidden="true"></span> @project.Name @if (project.Hidden)
-                                {
-                                    <span>&nbsp;(Hidden)</span>
-                                }
+                                <span class="oi oi-list flex-shrink-0" aria-hidden="true"></span>
+
+                                <span class="d-inline-block text-truncate">
+                                    @project.Name
+                                    @if (project.Hidden)
+                                    {
+                                        <span>&nbsp;(Hidden)</span>
+                                    }
+                                </span>
                             </NavLink>
                         </div>
                     }
@@ -68,7 +73,9 @@
             {
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="@($"project/{project.Id}")">
-                        <span class="oi oi-list" aria-hidden="true"></span> @project.Name
+                        <span class="oi oi-list flex-shrink-0" aria-hidden="true"></span>
+
+                        <span class="d-inline-block text-truncate">@project.Name</span>
                     </NavLink>
                 </div>
             }
