@@ -12,7 +12,13 @@
 </EditForm>
 
 <div class="my-3">
-    <h4>Preview (detailed)</h4>
+    <div class="d-flex justify-content-between align-items-center">
+        <h4>Preview (detailed)</h4>
+
+        <button class="btn btn-link" type="button" @onclick="() => StateHasChanged()">
+            <span class="oi oi-loop-circular" aria-hidden="true"></span> Update preview
+        </button>
+    </div>
 
     <div style="padding: 32px; border: 1px solid black; border-radius: 4px;">
         <ReleaseDetailed release="@release" />
