@@ -2,6 +2,7 @@
   "baseUrl": "https://localhost:7028",
   "integrationFolder": "cypress/tests",
   "scrollBehavior": "center",
+  "retries": 1,
   "env": {
     "ADMIN_EMAIL": "admin@example.com",
     "ADMIN_PASSWORD": "Admin123!"
