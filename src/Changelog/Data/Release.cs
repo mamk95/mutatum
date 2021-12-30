@@ -47,6 +47,15 @@ namespace Changelog.Data
         [Range(1, 31)]
         public int ReleaseDay { get; set; }
 
+        [NotMapped]
+        public string ReleaseDate
+        {
+            get
+            {
+                return $"{ReleaseYear}/{ReleaseMonth.ToString().PadLeft(2, '0')}/{ReleaseDay.ToString().PadLeft(2, '0')}";
+            }
+        }
+
         public IList<Change> Changes { get; set; } = new List<Change>();
     }
 }
