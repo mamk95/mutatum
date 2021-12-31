@@ -1,4 +1,14 @@
 /**
+ * Overwrites the default .type()-command with a default delay of 0ms. You can use another delay
+ * by adding custom delay: .type("your text", { delay: 5 });
+ */
+Cypress.Commands.overwrite('type', (originalFn, subject, text, options = {}) => {
+    options.delay ??= 0;
+
+    return originalFn(subject, text, options);
+});
+
+/**
  * Avoid anoying Cypress bug which does not re-query a selector if the element is detached from the DOM.
  * The element will sometimes be re-rendered right after page load, failing the test.
  * There are a lot of really complicated ways to avoid this. The easiest way is to just wait a bit.
