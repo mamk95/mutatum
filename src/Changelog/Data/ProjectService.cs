@@ -16,6 +16,32 @@ namespace Changelog.Data
             return _context.Projects.OrderBy(p => p.SortOrder).ToList();
         }
 
+        public IList<(Project project, int numberOfReleases)> GetProjectsWithNumberOfReleases(int projectLimit = 3)
+        {
+            return _context.Projects
+                .OrderByDescending(p => p.Releases.Count)
+                .Take(projectLimit)
+                .Select(p => new { project = p, numberOfReleases = p.Releases.Count })
+                .AsEnumerable()
+                .Select(x => (project: x.project, numberOfReleases: x.numberOfReleases))
+                .ToList();
+        }
+
+        public IList<Project> GetProjectsWithReleases(int releaseLimit = 3)
+        {
+            return _context.Projects
+                .OrderBy(p => p.SortOrder)
+                .Include(p => p.Releases
+                    .OrderByDescending(r => r.ReleaseYear)
+                    .ThenByDescending(r => r.ReleaseMonth)
+                    .ThenByDescending(r => r.ReleaseDay)
+                    .ThenByDescending(r => r.Major)
+                    .ThenByDescending(r => r.Minor)
+                    .ThenByDescending(r => r.Patch)
+                    .Take(releaseLimit))
+                .ToList();
+        }
+
         public Project GetProjectById(int id)
         {
             return _context.Projects

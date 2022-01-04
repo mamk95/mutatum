@@ -20,6 +20,35 @@ namespace Changelog.Data
                 .FirstOrDefault();
         }
 
+        public Release GetNewestRelease()
+        {
+            return _context.Releases
+                .OrderByDescending(r => r.ReleaseYear)
+                    .ThenByDescending(r => r.ReleaseMonth)
+                    .ThenByDescending(r => r.ReleaseDay)
+                    .ThenByDescending(r => r.Major)
+                    .ThenByDescending(r => r.Minor)
+                    .ThenByDescending(r => r.Patch)
+                .Include(r => r.Changes)
+                .ThenInclude(c => c.Category)
+                .FirstOrDefault();
+        }
+
+        public List<Release> GetNewestReleases(int releaseLimit = 5)
+        {
+            return _context.Releases
+                .OrderByDescending(r => r.ReleaseYear)
+                    .ThenByDescending(r => r.ReleaseMonth)
+                    .ThenByDescending(r => r.ReleaseDay)
+                    .ThenByDescending(r => r.Major)
+                    .ThenByDescending(r => r.Minor)
+                    .ThenByDescending(r => r.Patch)
+                .Include(r => r.Changes)
+                .ThenInclude(c => c.Category)
+                .Take(releaseLimit)
+                .ToList();
+        }
+
         public Release CreateRelease(Release release)
         {
             if (release.Id != default)
