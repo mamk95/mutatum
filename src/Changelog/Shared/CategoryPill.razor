@@ -1,0 +1,9 @@
+﻿<span style="background-color: @category.BackgroundColor; color: @category.TextColor;"
+      class="category-pill">
+    @category.Name
+</span>
+
+@code {
+    [Parameter]
+    public Category category { get; set; }
+}
