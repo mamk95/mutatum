@@ -16,9 +16,18 @@ namespace Changelog.Data
             return _context.Projects.OrderBy(p => p.SortOrder).ToList();
         }
 
-        public IList<(Project project, int numberOfReleases)> GetProjectsWithNumberOfReleases(int projectLimit = 3)
+        public IList<Project> GetNonHiddenProjects()
         {
             return _context.Projects
+                .Where(p => p.Hidden == false)
+                .OrderBy(p => p.SortOrder)
+                .ToList();
+        }
+
+        public IList<(Project project, int numberOfReleases)> GetProjectsWithNumberOfReleases(int projectLimit = 3, bool includeHidden = false)
+        {
+            return _context.Projects
+                .Where(p => p.Hidden == false || p.Hidden == includeHidden)
                 .OrderByDescending(p => p.Releases.Count)
                 .Take(projectLimit)
                 .Select(p => new { project = p, numberOfReleases = p.Releases.Count })
@@ -27,9 +36,10 @@ namespace Changelog.Data
                 .ToList();
         }
 
-        public IList<Project> GetProjectsWithReleases(int releaseLimit = 3)
+        public IList<Project> GetProjectsWithReleases(int releaseLimit = 3, bool includeHidden = false)
         {
             return _context.Projects
+                .Where(p => p.Hidden == false || p.Hidden == includeHidden)
                 .OrderBy(p => p.SortOrder)
                 .Include(p => p.Releases
                     .OrderByDescending(r => r.ReleaseYear)

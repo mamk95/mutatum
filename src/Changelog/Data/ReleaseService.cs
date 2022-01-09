@@ -20,9 +20,10 @@ namespace Changelog.Data
                 .FirstOrDefault();
         }
 
-        public Release GetNewestRelease()
+        public Release GetNewestRelease(bool includeHiddenProjects = false)
         {
             return _context.Releases
+                .Where(r => r.Project.Hidden == false || r.Project.Hidden == includeHiddenProjects)
                 .OrderByDescending(r => r.ReleaseYear)
                     .ThenByDescending(r => r.ReleaseMonth)
                     .ThenByDescending(r => r.ReleaseDay)
@@ -34,9 +35,10 @@ namespace Changelog.Data
                 .FirstOrDefault();
         }
 
-        public List<Release> GetNewestReleases(int releaseLimit = 5)
+        public List<Release> GetNewestReleases(int releaseLimit = 5, bool includeHiddenProjects = false)
         {
             return _context.Releases
+                .Where(r => r.Project.Hidden == false || r.Project.Hidden == includeHiddenProjects)
                 .OrderByDescending(r => r.ReleaseYear)
                     .ThenByDescending(r => r.ReleaseMonth)
                     .ThenByDescending(r => r.ReleaseDay)
