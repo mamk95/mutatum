@@ -1,0 +1,31 @@
+﻿.latest-releases-list {
+    width: 100%;
+    padding: 0;
+}
+
+.release-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    overflow: hidden;
+    color: inherit; /* Removes styling from <a> */
+    text-decoration: none; /* Removes styling from <a> */
+    gap: 8px;
+    height: 24px;
+}
+
+.release-date {
+    font-size: 12px;
+}
+
+.release-project-name {
+    display: inline-block;
+    flex-basis: 140px; /* Starting width of name. Since it only can grow (not shrink), the description will not shrink the name to anything lower than flex-basis. */
+    flex-grow: 1; /* See flex-grow comment on ".release-description" */
+}
+
+.release-description {
+    display: inline-block;
+    width: 200px;
+    flex-grow: 3; /* Grows three times more than name */
+}

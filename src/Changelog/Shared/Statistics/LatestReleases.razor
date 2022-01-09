@@ -1,0 +1,37 @@
+﻿@inject ReleaseService _releaseService
+
+@if (newestReleases != null && newestReleases.Count > 0)
+{
+    <ul class="latest-releases-list">
+        @foreach (var release in newestReleases)
+        {
+            <li class="d-block">
+                <a href="@($"project/{@release.ProjectId}")" class="release-wrapper">
+                    <span class="release-date">@release.ReleaseDate</span>
+
+                    <div class="release-project-name text-truncate">@release.Project.Name</div>
+
+                    @if (!string.IsNullOrEmpty(@release.ShortDescription))
+                    {
+                        <div class="release-description text-truncate">@release.ShortDescription</div>
+                    }
+                </a>
+
+                <hr />
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <i>No releases yet</i>
+}
+
+@code {
+    private List<Release> newestReleases { get; set; }
+
+    protected override void OnInitialized()
+    {
+        newestReleases = _releaseService.GetNewestReleases(releaseLimit: 4, includeHiddenProjects: false);
+    }
+}
