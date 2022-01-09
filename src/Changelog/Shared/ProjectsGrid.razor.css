@@ -1,0 +1,32 @@
+﻿.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    margin-top: 24px;
+    margin-bottom: 24px;
+    gap: 24px;
+}
+
+.project-wrapper {
+    color: unset; /* Removes styling from <a> */
+    text-decoration: unset; /* Removes styling from <a> */
+}
+
+.project {
+    height: 180px;
+    box-sizing: border-box;
+    border: 1px solid rgba(33, 37, 41, 0.25);
+    border-radius: 16px;
+    padding: 20px;
+    background-color: #3a0647;
+    color: white;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.last-release-date {
+    font-size: 12px;
+}
+
+.no-releases {
+    font-size: 14px;
+}
