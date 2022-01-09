@@ -1,0 +1,26 @@
+﻿.empty-project-wrapper {
+    font-size: 20px;
+    margin-top: 16px;
+}
+
+.statistics-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.statistics-overview {
+    flex-basis: 630px;
+    flex-grow: 3; /* When the wrapper has more space available, "overview" will grow three times faster than "latest releases" */
+}
+
+.statistics-latest-releases {
+    flex-grow: 1; /* When the wrapper has more space available, "overview" will grow three times faster than "latest releases" */
+    width: 240px;
+    box-sizing: border-box;
+    border: 1px solid rgba(33, 37, 41, 0.25);
+    border-radius: 16px;
+    padding: 32px 20px;
+    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    color: white;
+}
