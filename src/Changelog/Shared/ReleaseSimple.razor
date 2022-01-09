@@ -1,0 +1,71 @@
+﻿@using Changelog.Data
+
+@inject ReleaseService _releaseService
+
+<div class="release-simple-item">
+    <div class="version-title-date">
+        <h5 class="release-title d-inline m-0">
+            @($"{release.VersionAndTitle}")
+        </h5>
+
+        @if (showReleaseDate)
+        {
+            <div class="d-inline">
+                <span class="release-date">@release.ReleaseDate</span>
+            </div>
+        }
+    </div>
+
+    <div>
+        @foreach (var combinedCategory in CombinedChangeCategories)
+        {
+            <span class="me-1">
+                <CategoryPill category="combinedCategory" />
+            </span>
+        }
+
+        @if (showDescription)
+        {
+            <div class="release-shortdesc @(descriptionClampedTwoLines ? "release-shortdesc-line-clamp" : "")">
+                @release.ShortDescription
+            </div>
+        }
+    </div>
+
+</div>
+
+@code {
+    [Parameter]
+    public Release release { get; set; }
+
+    [Parameter]
+    public bool showReleaseDate { get; set; } = true;
+
+    [Parameter]
+    public bool showDescription { get; set; } = true;
+
+    [Parameter]
+    public bool descriptionClampedTwoLines { get; set; } = true;
+
+    public List<Category> CombinedChangeCategories
+    {
+        get
+        {
+            var categoriesByIds = release.Changes.Select(change => change.Category).GroupBy(cat => cat.Id);
+
+            return categoriesByIds.Select(catById =>
+            {
+                var firstCategory = catById.First();
+
+                return new Category
+                    {
+                        Id = catById.Key,
+                        Name = $"{catById.Count()}x {firstCategory.Name}",
+                        TextColor = firstCategory.TextColor,
+                        BackgroundColor = firstCategory.BackgroundColor
+
+                    };
+            }).ToList();
+        }
+    }
+}

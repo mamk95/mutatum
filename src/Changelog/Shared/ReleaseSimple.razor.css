@@ -1,0 +1,22 @@
+﻿.version-title-date {
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.release-date {
+    font-size: 12px;
+}
+
+.release-shortdesc {
+    margin-top: 16px;
+}
+
+.release-shortdesc-line-clamp {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+}
