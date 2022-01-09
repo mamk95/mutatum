@@ -278,9 +278,25 @@ public class SeedTestData
             await context.Changes.AddAsync(new Change
             {
                 Id = id++,
+                CategoryId = 2,
+                ReleaseId = 3,
+                Title = "Easier login"
+            });
+
+            await context.Changes.AddAsync(new Change
+            {
+                Id = id++,
                 CategoryId = 3,
                 ReleaseId = 3,
-                Title = "Added users"
+                Title = "Remove signout bug"
+            });
+
+            await context.Changes.AddAsync(new Change
+            {
+                Id = id++,
+                CategoryId = 2,
+                ReleaseId = 3,
+                Title = "Can directly click on button"
             });
 
             await context.Changes.AddAsync(new Change
