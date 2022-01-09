@@ -1,0 +1,34 @@
+﻿@inject ProjectService _projectService
+
+@if (projectsWithNumberOfReleases != null && projectsWithNumberOfReleases.Count > 0)
+{
+    <ol class="p-0 m-0">
+        @foreach (var projectWithReleaseCount in projectsWithNumberOfReleases.Select((value, index) => (index, value)))
+        {
+            <li class="d-block">
+                <a href="@($"project/{@projectWithReleaseCount.value.project.Id}")" class="ranked-release-wrapper">
+                    <span class="ranked-release-rank">@(projectWithReleaseCount.index + 1)</span>
+
+                    <div class="ranked-release-text-wrapper">
+                        <h4 class="ranked-release-heading text-truncate">@projectWithReleaseCount.value.project.Name</h4>
+
+                        <div>@projectWithReleaseCount.value.numberOfReleases releases</div>
+                    </div>
+                </a>
+            </li>
+        }
+    </ol>
+}
+else
+{
+    <i>No releases yet</i>
+}
+
+@code {
+    private IList<(Project project, int numberOfReleases)> projectsWithNumberOfReleases { get; set; }
+
+    protected override void OnInitialized()
+    {
+        projectsWithNumberOfReleases = _projectService.GetProjectsWithNumberOfReleases(projectLimit: 3, includeHidden: false);
+    }
+}
