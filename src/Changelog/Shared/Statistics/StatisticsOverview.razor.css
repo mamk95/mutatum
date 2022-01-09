@@ -1,0 +1,26 @@
+﻿.statistics-overview {
+    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    border-radius: 16px;
+    color: white;
+    padding: 32px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* creates a grid where each item/cell is min 250px and max 1 fraction (in this specific case, 1fr = 50%). If it can't fit on one line, "auto-fit" makes sure it wraps */
+    gap: 32px;
+    height: 100%; /* Fills parent flex row in index.razor, in case StatisticsOverview is shorter than LatestReleases */
+}
+
+.latest-release-wrapper {
+    max-height: 250px;
+}
+
+.latest-release {
+    max-width: 400px;
+    color: inherit; /* Removes styling from <a> */
+    text-decoration: inherit; /* Removes styling from <a> */
+}
+
+.most-releases {
+    padding-right: 8px;
+    max-height: 250px;
+    max-width: 100%;
+}

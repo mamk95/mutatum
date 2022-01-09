@@ -1,0 +1,33 @@
+﻿@inject ReleaseService _releaseService
+
+<div class="statistics-overview">
+    <div class="latest-release-wrapper">
+        <h3>Latest release</h3>
+
+        @if (newestRelease != null)
+        {
+            <a href="@($"project/{@newestRelease.ProjectId}")" class="latest-release">
+                <ReleaseSimple release="newestRelease" descriptionClampedTwoLines="false" />
+            </a>
+        }
+        else
+        {
+            <i>No releases yet</i>
+        }
+    </div>
+
+    <div class="most-releases m-lg-auto">
+        <h3>Most releases so far</h3>
+
+        <MostReleases />
+    </div>
+</div>
+
+@code {
+    private Release newestRelease { get; set; }
+
+    protected override void OnInitialized()
+    {
+        newestRelease = _releaseService.GetNewestRelease(includeHiddenProjects: false);
+    }
+}
