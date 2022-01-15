@@ -113,7 +113,7 @@ class Mutatum {
         poweredByWrapper.className = "mutatum--powered-by";
         poweredByWrapper.appendChild(document.createTextNode("Powered by "));
         const poweredByLink = document.createElement('a');
-        poweredByLink.href = 'https://github.com/mamk95/mutatum';
+        poweredByLink.href = 'https://mutatum.dev';
         poweredByLink.target = "_blank";
         poweredByLink.appendChild(document.createTextNode("mutatum"));
         poweredByWrapper.appendChild(poweredByLink);
