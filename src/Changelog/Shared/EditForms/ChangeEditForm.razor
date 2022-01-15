@@ -19,9 +19,9 @@
     </div>
 
     <div class="mb-3">
-        <label for="markdown" class="form-label">Description (markdown)</label>
+        <label for="@uniqueMarkdownId" class="form-label">Description (markdown)</label>
 
-        <InputTextArea id="markdown" @bind-Value="change.Markdown" class="form-control" />
+        <InputTextArea id="@uniqueMarkdownId" @bind-Value="change.Markdown" class="form-control" />
     </div>
 
     <DataAnnotationsValidator />
@@ -41,6 +41,10 @@
     [Parameter]
     public IList<Category> categories { get; set; }
 
+    // When displaying multiple of this ChangEditForm component, we need a
+    // unique ID for the input/textarea/markdown field
+    private string uniqueMarkdownId = $"markdown{Guid.NewGuid()}";
+
     private EditContext EditContext;
 
     protected override void OnInitialized()
@@ -57,7 +61,7 @@
         {
             // Coverts the description <textarea> into a markdown editor
             await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/easymde.2.15.0.min.js").AsTask();
-            await JSRuntime.InvokeVoidAsync("textareaIdToMarkdownEditor", "markdown");
+            await JSRuntime.InvokeVoidAsync("textareaIdToMarkdownEditor", uniqueMarkdownId);
         }
     }
 
