@@ -33,6 +33,8 @@
 
 💌 Easily integrate it into your existing webpage
 
+🤐 Privacy first: no data or telemetry leaves your server
+
 🏎️ Does <ins><u>one</u></ins> thing: changelog
 
 🔓 No user account needed to browse changelog
@@ -60,3 +62,10 @@ Sorry, but Mutatum is not really ready to be used yet. Once ready, you will be a
 _Mūtātum_ is Latin, making me sound important and knowledgeable.
 
 > **mūtātus (_neuter_ mūtātum)**: altered, changed, modified.
+
+## Thanks and Attributions
+
+A special thanks to those who have directly or indirectly contributed to this project.
+
+- Harmonais Visual for the tablet and phone mockup template
+  - https://harmonaisvisual.com/freebies/digital-mockup-freebie
