@@ -33,7 +33,7 @@
 
 💌 Easily integrate it into your existing webpage
 
-🏎️ Does <u>one</u> thing: changelog
+🏎️ Does <ins><u>one</u></ins> thing: changelog
 
 🔓 No user account needed to browse changelog
 
