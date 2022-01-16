@@ -7,7 +7,7 @@
     <img alt="Last commit" src="https://img.shields.io/github/last-commit/mamk95/mutatum?color=brightgreen">
     <img alt="Open GitHub issues" src="https://img.shields.io/github/issues-raw/mamk95/mutatum">
     <img alt="Stability: Work in progress" src="https://img.shields.io/badge/stability-wip-lightgrey.svg">
-    <a href="blob/master/LICENSE">
+    <a href="LICENSE">
         <img alt="MIT license" src="https://img.shields.io/github/license/mamk95/mutatum?color=blue">
     </a>
 </p>
@@ -18,7 +18,7 @@
   <a href="#demo">Demo</a> •
   <a href="https://docs.mutatum.dev/">Documentation</a> •
   <a href="#installation">Installation</a> •
-  <a href="blob/master/LICENSE">License</a>
+  <a href="LICENSE">License</a>
 </p>
 
 ![Screenshot of home page](docs/assets/screenshot-home.png)
