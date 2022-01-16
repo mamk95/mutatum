@@ -21,7 +21,7 @@
   <a href="LICENSE">License</a>
 </p>
 
-![Screenshot of home page](docs/assets/screenshot-home.png)
+![Screenshot of home page](docs/assets/screenshot-home_light-dark-theme-supported.png)
 
 ## Features
 
