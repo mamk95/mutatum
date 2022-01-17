@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Changelog.Data;
 
 namespace Changelog.Areas.Identity.Pages.Account
 {
@@ -21,11 +22,13 @@ namespace Changelog.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly AccountRateLimitProtection _accountRateLimitProtection;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, AccountRateLimitProtection accountRateLimitProtection)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _accountRateLimitProtection = accountRateLimitProtection;
         }
 
         /// <summary>
@@ -84,6 +87,8 @@ namespace Changelog.Areas.Identity.Pages.Account
             public bool RememberMe { get; set; }
         }
 
+        public bool BlockedByHighThreatLevel { get; set; }
+
         public async Task OnGetAsync(string returnUrl = null)
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
@@ -98,11 +103,19 @@ namespace Changelog.Areas.Identity.Pages.Account
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
+            BlockedByHighThreatLevel = _accountRateLimitProtection.CurrentThreatLevel >= ThreatLevel.High;
+
             ReturnUrl = returnUrl;
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            if (_accountRateLimitProtection.CurrentThreatLevel >= ThreatLevel.High)
+            {
+                ModelState.AddModelError(string.Empty, "You cannot login due to a high threat level.");
+                return Page();
+            }
+
             returnUrl ??= Url.Content("~/");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -114,6 +127,7 @@ namespace Changelog.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    _accountRateLimitProtection.AddSuccessfulLogin();
                     return LocalRedirect(returnUrl);
                 }
 
@@ -135,6 +149,7 @@ namespace Changelog.Areas.Identity.Pages.Account
                 }
                 else
                 {
+                    _accountRateLimitProtection.AddFailedLogin();
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }

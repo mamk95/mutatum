@@ -1,0 +1,22 @@
+﻿<div style="border: 3px solid red; border-radius: 8px; padding: 16px;">
+    <p>
+        Mutatum is in global high-protection mode in an attempt to protect against attackers.
+        This can happen when a lot of logins or account registrations have been logged in a short or sustained amount of time.
+        To unlock this Mutatum instance, wait for 10 to 15 minutes. If you often see this message, and you are sure no one is
+        attempting a <a href="https://en.wikipedia.org/wiki/Brute-force_attack">brute-force attack</a>, a
+        <a href="https://en.wikipedia.org/wiki/Credential_stuffing"> credential stuffing attack</a> or general bot activity,
+        ask your administrator to turn off the account protection feature of Mutatum.
+    </p>
+
+    <p>
+        Information about high-protection mode:
+        <ul>
+            <li>Meant to protect against bot activity and human attackers.</li>
+            <li>Will not affect non-admin pages or admins already logged in. Only logins and account registrations are temporarily blocked.</li>
+            <li>Activated based on the amount of successful and failed logins in addition to account registrations logged.</li>
+            <li>Successful logins will not activate high-protection mode by itself, but makes it easier for other metrics to trigger a lockdown.</li>
+            <li>The count of successful logins, failed logins and account registrations are individually cleared after 10 minutes of inactivity (sliding 10 minutes expiration), or when the server is rebooted.</li>
+        </ul>
+    </p>
+
+</div>

@@ -1,3 +1,4 @@
+using Changelog;
 using Changelog.Areas.Identity;
 using Changelog.Data;
 using Changelog.Data.Options;
@@ -40,7 +41,10 @@ builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuth
 { // Reading AppSettings options
     builder.Services.Configure<BrandingOptions>(builder.Configuration.GetSection(BrandingOptions.AppsettingsSectionName));
     builder.Services.Configure<FirstRunOptions>(builder.Configuration.GetSection(FirstRunOptions.AppsettingsSectionName));
+    builder.Services.Configure<AccountRateLimitProtectionOptions>(builder.Configuration.GetSection(AccountRateLimitProtectionOptions.AppsettingsSectionName));
 }
+
+builder.Services.AddScoped<AccountRateLimitProtection>();
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore

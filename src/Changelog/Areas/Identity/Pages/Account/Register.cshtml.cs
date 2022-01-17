@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using Changelog.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -28,18 +29,21 @@ namespace Changelog.Areas.Identity.Pages.Account
         private readonly IUserStore<IdentityUser> _userStore;
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
+        private readonly AccountRateLimitProtection _accountRateLimitProtection;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
-            ILogger<RegisterModel> logger)
+            ILogger<RegisterModel> logger,
+            AccountRateLimitProtection accountRateLimitProtection)
         {
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
+            _accountRateLimitProtection = accountRateLimitProtection;
         }
 
         /// <summary>
@@ -96,19 +100,30 @@ namespace Changelog.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
         }
 
+        public bool BlockedByHighThreatLevel { get; set; }
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            BlockedByHighThreatLevel = _accountRateLimitProtection.CurrentThreatLevel >= ThreatLevel.High;
+
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            if (_accountRateLimitProtection.CurrentThreatLevel >= ThreatLevel.High)
+            {
+                ModelState.AddModelError(string.Empty, "You cannot register a new account due to a high threat level.");
+                return Page();
+            }
+
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+                _accountRateLimitProtection.AddAccountRegistration();
+
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
