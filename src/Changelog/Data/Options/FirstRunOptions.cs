@@ -30,6 +30,7 @@
         public string SeedWithTestData { get; set; }
 
 #pragma warning disable CS0618 // Type or member is obsolete
+        /// <inheritdoc cref="SeedWithTestData"/>
         public bool SeedWithTestDataBool => SeedWithTestData.ToLower() == "true" || SeedWithTestData == "1";
 #pragma warning restore CS0618 // Type or member is obsolete
     }
