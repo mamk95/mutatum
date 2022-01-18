@@ -125,20 +125,20 @@
 </Modal>
 
 @code {
-    [Inject] UserManager<IdentityUser> _userManager { get; set; }
+    [Inject] UserManager<ApplicationUser> _userManager { get; set; }
     [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
     [Inject] NavigationManager NavigationManager { get; set; }
     [Inject] IJSRuntime JsRuntime { get; set; }
 
     private Modal deleteModal { get; set; }
 
-    private IdentityUser userToDelete { get; set; }
+    private ApplicationUser userToDelete { get; set; }
 
-    private IEnumerable<IdentityUser> AllUsers => _userManager.Users;
-    private IEnumerable<IdentityUser> ConfirmedUsers => AllUsers.Where(u => u.EmailConfirmed);
-    private IEnumerable<IdentityUser> UnconfirmedUsers => AllUsers.Where(u => !u.EmailConfirmed);
+    private IEnumerable<ApplicationUser> AllUsers => _userManager.Users;
+    private IEnumerable<ApplicationUser> ConfirmedUsers => AllUsers.Where(u => u.EmailConfirmed);
+    private IEnumerable<ApplicationUser> UnconfirmedUsers => AllUsers.Where(u => !u.EmailConfirmed);
 
-    private IdentityUser CurrentUser { get; set; }
+    private ApplicationUser CurrentUser { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
@@ -151,13 +151,13 @@
         }
     }
 
-    private async Task ActivateUser(IdentityUser user)
+    private async Task ActivateUser(ApplicationUser user)
     {
         await _userManager.ConfirmEmailAsync(user, await _userManager.GenerateEmailConfirmationTokenAsync(user));
         NavigationManager.NavigateTo(NavigationManager.Uri, true); // Reload page to update everything in the UI
     }
 
-    private async Task DeleteUser(IdentityUser user)
+    private async Task DeleteUser(ApplicationUser user)
     {
         if (user.Id == CurrentUser.Id)
         {

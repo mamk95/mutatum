@@ -17,7 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("Changelog"));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services
-    .AddDefaultIdentity<IdentityUser>(options =>
+    .AddDefaultIdentity<ApplicationUser>(options =>
     {
         // We use this to block new users access without an existing user/admin confirming the account first
         options.SignIn.RequireConfirmedAccount = true; // true = users without a confirmed account/email cannot login
@@ -30,7 +30,7 @@ builder.Services
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
 
 { // Data services
     builder.Services.AddScoped<ProjectService>();

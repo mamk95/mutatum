@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Changelog.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Project> Projects { get; set; }
 

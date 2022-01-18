@@ -48,8 +48,8 @@ public class SeedTestData
 
         if (!context.Users.Any(u => u.UserName == "admin"))
         {
-            var hasher = new PasswordHasher<IdentityUser>();
-            var user = new IdentityUser
+            var hasher = new PasswordHasher<ApplicationUser>();
+            var user = new ApplicationUser
             {
                 Id = ADMIN_ID,
                 UserName = adminEmail,
@@ -63,7 +63,7 @@ public class SeedTestData
 
             user.PasswordHash = hasher.HashPassword(user, adminPassword);
 
-            var userStore = new UserStore<IdentityUser>(context);
+            var userStore = new UserStore<ApplicationUser>(context);
             await userStore.CreateAsync(user);
 
             await userStore.AddToRoleAsync(user, "admin");

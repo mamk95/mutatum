@@ -20,11 +20,11 @@ namespace Changelog.Areas.Identity.Pages.Account
 {
     public class LoginModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly AccountRateLimitProtection _accountRateLimitProtection;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, AccountRateLimitProtection accountRateLimitProtection)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, AccountRateLimitProtection accountRateLimitProtection)
         {
             _signInManager = signInManager;
             _logger = logger;
