@@ -134,7 +134,7 @@
 
     private ApplicationUser userToDelete { get; set; }
 
-    private IEnumerable<ApplicationUser> AllUsers => _userManager.Users;
+    private List<ApplicationUser> AllUsers { get; set; }
     private IEnumerable<ApplicationUser> ConfirmedUsers => AllUsers.Where(u => u.EmailConfirmed);
     private IEnumerable<ApplicationUser> UnconfirmedUsers => AllUsers.Where(u => !u.EmailConfirmed);
 
@@ -142,6 +142,8 @@
 
     protected async override Task OnInitializedAsync()
     {
+        AllUsers = _userManager.Users.ToList();
+
         var authstate = await _authenticationStateProvider.GetAuthenticationStateAsync();
         CurrentUser = AllUsers.FirstOrDefault(u => u.UserName == authstate.User.Identity.Name);
 
