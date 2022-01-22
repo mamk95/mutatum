@@ -1,6 +1,7 @@
 ﻿using Changelog.Data.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Options;
 
 namespace Changelog.Data;
@@ -72,29 +73,27 @@ public class SeedTestData
         await context.SaveChangesAsync();
     }
 
+    private static EntityEntry<Category> CategoryNew, CategoryImproved, CategoryFixed;
     private static async Task CreateCategories(ApplicationDbContext context)
     {
         if (!context.Categories.Any())
         {
-            await context.Categories.AddAsync(new Category
+            CategoryNew = await context.Categories.AddAsync(new Category
             {
-                Id = 1,
                 Name = "New",
                 BackgroundColor = "#00ca00",
                 TextColor = "white",
             });
 
-            await context.Categories.AddAsync(new Category
+            CategoryImproved = await context.Categories.AddAsync(new Category
             {
-                Id = 2,
                 Name = "Improved",
                 BackgroundColor = "#9393ff",
                 TextColor = "white",
             });
 
-            await context.Categories.AddAsync(new Category
+            CategoryFixed = await context.Categories.AddAsync(new Category
             {
-                Id = 3,
                 Name = "Fixed",
                 BackgroundColor = "#ea00ea",
                 TextColor = "white",
@@ -104,55 +103,47 @@ public class SeedTestData
         await context.SaveChangesAsync();
     }
 
+    private static EntityEntry<Project> Project1, Project2, Project3, Project4, Project5, Project6, ProjectHidden;
     private static async Task CreateProjects(ApplicationDbContext context)
     {
         if (!context.Projects.Any())
         {
-            int id = 1;
-
-            await context.Projects.AddAsync(new Project
+            Project1 = await context.Projects.AddAsync(new Project
             {
-                Id = id++,
                 Name = "Project 1",
                 Description = "The first test project",
                 SortOrder = 1,
             });
 
-            await context.Projects.AddAsync(new Project
+            Project2 = await context.Projects.AddAsync(new Project
             {
-                Id = id++,
                 Name = "Project 2",
                 Description = "The second test project",
                 SortOrder = 2,
             });
 
-            await context.Projects.AddAsync(new Project
+            Project3 = await context.Projects.AddAsync(new Project
             {
-                Id = id++,
-                Name = $"Project {id - 1}",
+                Name = "Project 3",
             });
 
-            await context.Projects.AddAsync(new Project
+            Project4 = await context.Projects.AddAsync(new Project
             {
-                Id = id++,
-                Name = $"Project {id - 1}",
+                Name = "Project 4",
             });
 
-            await context.Projects.AddAsync(new Project
+            Project5 = await context.Projects.AddAsync(new Project
             {
-                Id = id++,
-                Name = $"Project {id - 1}",
+                Name = "Project 5",
             });
 
-            await context.Projects.AddAsync(new Project
+            Project6 = await context.Projects.AddAsync(new Project
             {
-                Id = id++,
-                Name = $"Project {id - 1}",
+                Name = "Project 6",
             });
 
-            await context.Projects.AddAsync(new Project
+            ProjectHidden = await context.Projects.AddAsync(new Project
             {
-                Id = id++,
                 Name = "Hidden project",
                 Hidden = true,
             });
@@ -161,14 +152,15 @@ public class SeedTestData
         await context.SaveChangesAsync();
     }
 
+    private static EntityEntry<Release> Release1Project1, Release2Project1, Release3Project1, Release1Project2;
+
     private static async Task CreateReleases(ApplicationDbContext context)
     {
         if (!context.Releases.Any())
         {
-            await context.Releases.AddAsync(new Release
+            Release1Project1 = await context.Releases.AddAsync(new Release
             {
-                Id = 1,
-                ProjectId = 1,
+                ProjectId = Project1.Entity.Id,
                 Title = "First release",
                 ShortDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
                 LongDescriptionMarkdown = "*Markdown* **here**",
@@ -180,10 +172,9 @@ public class SeedTestData
                 ReleaseDay = 13,
             });
 
-            await context.Releases.AddAsync(new Release
+            Release2Project1 = await context.Releases.AddAsync(new Release
             {
-                Id = 2,
-                ProjectId = 1,
+                ProjectId = Project1.Entity.Id,
                 ShortDescription = "Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
                 LongDescriptionMarkdown = "Sed ut *perspiciatis* unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto **beatae vitae dicta sunt** (!) explicabo 😃 Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt 👏👏👏",
                 Major = 1,
@@ -194,10 +185,9 @@ public class SeedTestData
                 ReleaseDay = 14,
             });
 
-            await context.Releases.AddAsync(new Release
+            Release3Project1 = await context.Releases.AddAsync(new Release
             {
-                Id = 3,
-                ProjectId = 1,
+                ProjectId = Project1.Entity.Id,
                 Title = "Added users",
                 ShortDescription = "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
                 LongDescriptionMarkdown = "*Markdown* **here**",
@@ -209,10 +199,9 @@ public class SeedTestData
                 ReleaseDay = 23,
             });
 
-            await context.Releases.AddAsync(new Release
+            Release1Project2 = await context.Releases.AddAsync(new Release
             {
-                Id = 4,
-                ProjectId = 2,
+                ProjectId = Project2.Entity.Id,
                 Title = "Init",
                 Major = 0,
                 Minor = 0,
@@ -230,80 +219,69 @@ public class SeedTestData
     {
         if (!context.Changes.Any())
         {
-            var id = 1;
-
             await context.Changes.AddAsync(new Change
             {
-                Id = id++,
-                CategoryId = 3,
-                ReleaseId = 1,
+                CategoryId = CategoryFixed.Entity.Id,
+                ReleaseId = Release1Project1.Entity.Id,
                 Title = "Squashes bugs",
                 Markdown = "**bold text**"
             });
 
             await context.Changes.AddAsync(new Change
             {
-                Id = id++,
-                CategoryId = 1,
-                ReleaseId = 1,
+                CategoryId = CategoryNew.Entity.Id,
+                ReleaseId = Release1Project1.Entity.Id,
                 Title = "Added changelog",
                 Markdown = "Markdown here, *italic*, **bold**\n\n1. List item 1\n2. List item 2\n\n![The San Juan Mountains are beautiful!](https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Whatsapp_chatting_outdoor_20180808.jpg/320px-Whatsapp_chatting_outdoor_20180808.jpg)"
             });
 
             await context.Changes.AddAsync(new Change
             {
-                Id = id++,
-                CategoryId = 1,
-                ReleaseId = 1,
+                CategoryId = CategoryNew.Entity.Id,
+                ReleaseId = Release1Project1.Entity.Id,
                 Title = "Added tests",
                 Markdown = "*italic text*"
             });
 
             await context.Changes.AddAsync(new Change
             {
-                Id = id++,
-                CategoryId = 3,
-                ReleaseId = 2,
+                CategoryId = CategoryFixed.Entity.Id,
+                ReleaseId = Release2Project1.Entity.Id,
                 Title = "Fixed bug"
             });
 
             await context.Changes.AddAsync(new Change
             {
-                Id = id++,
-                CategoryId = 2,
-                ReleaseId = 2,
+                CategoryId = CategoryImproved.Entity.Id,
+                ReleaseId = Release2Project1.Entity.Id,
                 Title = "Improved changelog"
             });
 
             await context.Changes.AddAsync(new Change
             {
-                Id = id++,
-                CategoryId = 2,
-                ReleaseId = 3,
+                CategoryId = CategoryImproved.Entity.Id,
+                ReleaseId = Release3Project1.Entity.Id,
                 Title = "Easier login"
             });
 
             await context.Changes.AddAsync(new Change
             {
-                Id = id++,
-                CategoryId = 3,
-                ReleaseId = 3,
+                CategoryId = CategoryFixed.Entity.Id,
+                ReleaseId = Release3Project1.Entity.Id,
                 Title = "Remove signout bug"
             });
 
             await context.Changes.AddAsync(new Change
             {
-                Id = id++,
-                CategoryId = 2,
-                ReleaseId = 3,
+                CategoryId = CategoryImproved.Entity.Id,
+                ReleaseId = Release3Project1.Entity.Id,
                 Title = "Can directly click on button"
             });
 
             await context.Changes.AddAsync(new Change
             {
-                Id = id++,
-                CategoryId = 1,
-                ReleaseId = 4,
+                CategoryId = CategoryNew.Entity.Id,
+                ReleaseId = Release1Project2.Entity.Id,
                 Title = "Init"
             });
         }
