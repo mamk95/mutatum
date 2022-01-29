@@ -18,6 +18,7 @@
   - [Docs](docs.md)
   - [Development setup](dev-setup.md)
   - [Development guidelines](dev-guidelines.md)
+  - [Database changes](dev-db.md)
   - [Pull requests](dev-pr.md)
 
 - [Changelog](https://changelog.mutatum.dev)
