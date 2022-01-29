@@ -10,12 +10,12 @@ namespace Changelog.Data
         [Required]
         public string Name { get; set; }
 
-        public string? Description { get; set; }
+        public string Description { get; set; }
 
         public bool Hidden { get; set; } = false;
 
         public int SortOrder { get; set; } = 99;
 
-        public IList<Release>? Releases { get; set; }
+        public ICollection<Release> Releases { get; set; }
     }
 }
