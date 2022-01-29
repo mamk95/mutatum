@@ -31,4 +31,13 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\Database\Migrations\MariaDB\" />
+    <Folder Include="Data\Database\Migrations\MsSQL\" />
+    <Folder Include="Data\Database\Migrations\MySQL\" />
+    <Folder Include="Data\Database\Migrations\Postgres\" />
+    <Folder Include="Data\Database\Migrations\SQLite\" />
+    <Folder Include="Data\Database\Scripts\" />
+  </ItemGroup>
+
 </Project>
