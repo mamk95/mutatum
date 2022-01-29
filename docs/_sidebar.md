@@ -12,6 +12,15 @@
   - [Branding](branding.md)
   - [Security](security.md)
 
+- Deployment
+
+  - [Docker](deploy-docker.md)
+  - [Azure](deploy-azure.md)
+  - [Heroku](deploy-heroku.md)
+  - [AWS](deploy-aws.md)
+  - [Windows without Docker](deploy-windows-without-docker.md)
+  - [Linux without Docker](deploy-linux-without-docker.md)
+
 - Contribute
 
   - [Issues, bugs or questions](issues.md)
