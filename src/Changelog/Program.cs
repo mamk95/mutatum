@@ -1,20 +1,64 @@
 using Changelog;
 using Changelog.Areas.Identity;
 using Changelog.Data;
+using Changelog.Data.Database;
 using Changelog.Data.Options;
+using Changelog.Data.Options.Database;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-//builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase("Changelog"));
+DatabaseOptions dbOptions = builder.Configuration.GetSection(DatabaseOptions.AppsettingsSectionName).Get<DatabaseOptions>();
+
+if (dbOptions.Provider == "InMemory")
+{
+    builder.Services.AddDbContext<AppDbContext, InMemoryDbContext>(options => options.UseInMemoryDatabase(dbOptions.InMemory.DatabaseName));
+}
+else if (dbOptions.Provider == "MySQL")
+{
+    var serverVersion = ServerVersion.AutoDetect(dbOptions.MySQL.ConnectionString);
+    if (serverVersion.Type == ServerType.MySql && serverVersion.Version.Major < 8)
+        throw new Exception($"Only MySQL v8.0.0 or newer is supported. Please see the Mutatum docs. Your server seems to be running v{serverVersion.Version}.");
+
+    builder.Services.AddDbContext<AppDbContext, MySqlDbContext>(options =>
+            options.UseMySql(
+                        dbOptions.MySQL.ConnectionString,
+                        serverVersion)
+    );
+}
+else if (dbOptions.Provider == "MariaDB")
+{
+    var serverVersion = ServerVersion.AutoDetect(dbOptions.MariaDB.ConnectionString);
+
+    builder.Services.AddDbContext<AppDbContext, MariaDbContext>(options =>
+            options.UseMySql(
+                        dbOptions.MariaDB.ConnectionString,
+                        serverVersion)
+    );
+}
+else if (dbOptions.Provider == "MsSQL")
+{
+    builder.Services.AddDbContext<AppDbContext, MsSqlDbContext>(options => options.UseSqlServer(dbOptions.MsSQL.ConnectionString));
+}
+else if (dbOptions.Provider == "Postgres")
+{
+    builder.Services.AddDbContext<AppDbContext, PostgresDbContext>(options => options.UseNpgsql(dbOptions.Postgres.ConnectionString));
+}
+else if (dbOptions.Provider == "SQLite")
+{
+    builder.Services.AddDbContext<AppDbContext, SQLiteDbContext>(options => options.UseSqlite(dbOptions.SQLite.ConnectionString));
+}
+else
+{
+    throw new Exception($"Unknown database provider '{dbOptions.Provider}'. Please read the Mutatum docs.");
+}
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services
     .AddDefaultIdentity<ApplicationUser>(options =>
@@ -26,8 +70,10 @@ builder.Services
         options.Lockout.AllowedForNewUsers = true;
         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
         options.Lockout.MaxFailedAccessAttempts = 4;
+
+        options.Stores.MaxLengthForKeys = 128; // Helps avoid issues in MsSQL and MySQL regarding index length. Both MsSQL and MySQL need additional config, see MsSqlDbContext and MySqlDbContext
     })
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddEntityFrameworkStores<AppDbContext>();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
@@ -42,6 +88,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuth
     builder.Services.Configure<BrandingOptions>(builder.Configuration.GetSection(BrandingOptions.AppsettingsSectionName));
     builder.Services.Configure<FirstRunOptions>(builder.Configuration.GetSection(FirstRunOptions.AppsettingsSectionName));
     builder.Services.Configure<AccountRateLimitProtectionOptions>(builder.Configuration.GetSection(AccountRateLimitProtectionOptions.AppsettingsSectionName));
+    builder.Services.Configure<DatabaseOptions>(builder.Configuration.GetSection(DatabaseOptions.AppsettingsSectionName));
 }
 
 builder.Services.AddScoped<AccountRateLimitProtection>();
