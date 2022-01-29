@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Changelog.Data.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace Changelog.Data
 {
     public class CategoryService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly AppDbContext _context;
 
-        public CategoryService(ApplicationDbContext context)
+        public CategoryService(AppDbContext context)
         {
             _context = context;
         }

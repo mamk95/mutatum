@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Changelog.Data.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace Changelog.Data
 {
     public class ProjectService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly AppDbContext _context;
 
-        public ProjectService(ApplicationDbContext context)
+        public ProjectService(AppDbContext context)
         {
             _context = context;
         }

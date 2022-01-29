@@ -1,4 +1,5 @@
-﻿using Changelog.Data.Options;
+﻿using Changelog.Data.Database;
+using Changelog.Data.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -10,7 +11,7 @@ public class SeedTestData
 {
     public static async Task Seed(IServiceProvider services)
     {
-        var context = services.GetService<ApplicationDbContext>();
+        var context = services.GetService<AppDbContext>();
 
         var firstRunConfig = services.GetService<IOptions<FirstRunOptions>>();
         if (firstRunConfig == null) return;
@@ -26,33 +27,17 @@ public class SeedTestData
         }
     }
 
-    private static async Task CreateAdminUser(ApplicationDbContext context, string adminEmail, string adminPassword)
+    private static async Task CreateAdminUser(AppDbContext context, string adminEmail, string adminPassword)
     {
         if (string.IsNullOrEmpty(adminEmail) || string.IsNullOrEmpty(adminPassword))
             return;
 
-        // any unique string id
-        const string ADMIN_ID = "5d1c46d4-79f1-4972-906d-b4d1140ca64a";
-        const string ROLE_ID = "67f34fe4-22b8-4a4f-a641-8aa13a81ad1f";
-
-        var roleStore = new RoleStore<IdentityRole>(context);
-
-        if (!context.Roles.Any(r => r.Name == "admin"))
-        {
-            await roleStore.CreateAsync(new IdentityRole()
-            {
-                Id = ROLE_ID,
-                Name = "admin",
-                NormalizedName = "admin"
-            });
-        }
-
-        if (!context.Users.Any(u => u.UserName == "admin"))
+        if (!context.Users.Any())
         {
             var hasher = new PasswordHasher<ApplicationUser>();
             var user = new ApplicationUser
             {
-                Id = ADMIN_ID,
+                Id = Guid.NewGuid().ToString(),
                 UserName = adminEmail,
                 NormalizedUserName = adminEmail.ToUpper(), // This is used as the "Email input" when logging in. Must be upper case
                 Email = adminEmail,
@@ -66,15 +51,13 @@ public class SeedTestData
 
             var userStore = new UserStore<ApplicationUser>(context);
             await userStore.CreateAsync(user);
-
-            await userStore.AddToRoleAsync(user, "admin");
         }
 
         await context.SaveChangesAsync();
     }
 
     private static EntityEntry<Category> CategoryNew, CategoryImproved, CategoryFixed;
-    private static async Task CreateCategories(ApplicationDbContext context)
+    private static async Task CreateCategories(AppDbContext context)
     {
         if (!context.Categories.Any())
         {
@@ -104,7 +87,7 @@ public class SeedTestData
     }
 
     private static EntityEntry<Project> Project1, Project2, Project3, Project4, Project5, Project6, ProjectHidden;
-    private static async Task CreateProjects(ApplicationDbContext context)
+    private static async Task CreateProjects(AppDbContext context)
     {
         if (!context.Projects.Any())
         {
@@ -154,7 +137,7 @@ public class SeedTestData
 
     private static EntityEntry<Release> Release1Project1, Release2Project1, Release3Project1, Release1Project2;
 
-    private static async Task CreateReleases(ApplicationDbContext context)
+    private static async Task CreateReleases(AppDbContext context)
     {
         if (!context.Releases.Any())
         {
@@ -215,7 +198,7 @@ public class SeedTestData
         await context.SaveChangesAsync();
     }
 
-    private static async Task CreateChanges(ApplicationDbContext context)
+    private static async Task CreateChanges(AppDbContext context)
     {
         if (!context.Changes.Any())
         {

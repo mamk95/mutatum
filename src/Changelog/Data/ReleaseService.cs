@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Changelog.Data.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace Changelog.Data
 {
     public class ReleaseService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly AppDbContext _context;
 
-        public ReleaseService(ApplicationDbContext context)
+        public ReleaseService(AppDbContext context)
         {
             _context = context;
         }
