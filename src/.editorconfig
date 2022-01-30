@@ -1,0 +1,249 @@
+# You can learn more about editorconfig here: https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
+# See this page for examples: https://kent-boogaart.com/blog/editorconfig-reference-for-c-developers
+
+# Note: To get dotnet to produce errors during build (not just when viewing the files in the editor), you have to do some extra things.
+# These settings will not catch all style errors during build, but it will catch many of them.
+# In your csproj file, add this: <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+# In your csproj file, add these lines:
+#   <!-- Workaround for https://github.com/dotnet/roslyn/issues/53720 -->
+#   <PropertyGroup>
+#     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+#     <NoWarn>$(NoWarn);CS1591;CS1573</NoWarn>
+#   </PropertyGroup>
+# Add the following Nuget package: Microsoft.CodeAnalysis.CSharp.CodeStyle.
+# These settings are already enabled below, but for completeness I'm just mentioning they are needed:
+# dotnet_analyzer_diagnostic.category-Style.severity = warning
+# dotnet_analyzer_diagnostic.category-CodeQuality.severity = warning
+# dotnet_diagnostic.IDE0055.severity = error
+
+root = true # top-most EditorConfig file. Do not continue searching in parent folders
+
+# All files
+[*]
+
+# Core editorconfig formatting - indentation
+indent_style = space # use soft tabs (spaces) for indentation
+tab_width = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+# (Please don't specify an indent_size here; that has too many unintended consequences.)
+
+[*.{razor,cshtml}]
+
+charset = utf-8-bom # Useful for Visual Studio files, see https://github.com/editorconfig/editorconfig/issues/297
+
+
+# Code files
+[*.{cs,csx,vb,vbx}]
+
+charset = utf-8-bom # Useful for Visual Studio files, see https://github.com/editorconfig/editorconfig/issues/297
+
+insert_final_newline = true
+
+# Default severity for code style and quality rules. These are needed to trigger build errors/warnings (because you need the ruleID (e.g. IDE0008) to trigger build errors, "csharp_style_var_for_built_in_types" only works inside the IDE/Visual Studio). Without them you only get an error inside Visual Studio, not in the actual build
+dotnet_analyzer_diagnostic.severity = warning
+dotnet_analyzer_diagnostic.category-Style.severity = warning # Default severity for all IDE code style rules with category 'Style'
+dotnet_analyzer_diagnostic.category-CodeQuality.severity = warning # Default severity for all IDE code quality rules with category 'CodeQuality'
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.severity = warning
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.SpecialRules.severity = warning
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.SpacingRules.severity = warning
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.ReadabilityRules.severity = warning # Default severity for analyzer diagnostics with category 'StyleCop.CSharp.ReadabilityRules'
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.OrderingRules.severity = warning
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.NamingRules.severity = warning # Default severity for analyzer diagnostics with category 'StyleCop.CSharp.NamingRules'
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.MaintainabilityRules.severity = warning
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.LayoutRules.severity = warning # Default severity for analyzer diagnostics with category 'StyleCop.CSharp.LayoutRules'
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.DocumentationRules.severity = warning # Default severity for analyzer diagnostics with category 'StyleCop.CSharp.DocumentationRules'
+dotnet_analyzer_diagnostic.category-StyleCop.CSharp.AlternativeRules.severity = warning
+dotnet_analyzer_diagnostic.category-Roslynator.severity = warning # Default severity for analyzer diagnostics with category 'Roslynator'
+
+# Core editorconfig formatting - indentation
+indent_size = 4
+
+# Formatting - formatting errors produce Visual Studio errors. To get build errors, also add the Nuget package Microsoft.CodeAnalysis.CSharp.CodeStyle and set dotnet_analyzer_diagnostic.category-Style.severity = warning and dotnet_analyzer_diagnostic.category-CodeQuality.severity = warning
+dotnet_diagnostic.IDE0055.severity = error
+
+#Formatting - new line options
+csharp_new_line_before_members_in_object_initializers = true # require members of object initializers to be on separate lines
+csharp_new_line_before_open_brace = all # require braces to be on a new line (also known as "Allman" style)
+csharp_new_line_before_catch = true # place catch statements on a new line
+csharp_new_line_before_else = true # place else statements on a new line
+csharp_new_line_before_finally = true # require finally statements to be on a new line after the closing brace
+csharp_new_line_before_members_in_anonymous_types = true # require members of anonymous types to be on the same line
+
+# Formatting - usings
+dotnet_diagnostic.IDE0005.severity = error # error on unused usings
+dotnet_separate_import_directive_groups = false 
+dotnet_sort_system_directives_first = true # sort System.* using directives alphabetically, and place them before other usings
+# TODO #csharp_using_directive_placement = inside_namespace # Prefer using directives to be placed inside the namespace. See why here: https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1200.md
+# TODO Remove below
+dotnet_diagnostic.SA1200.severity = none
+# TODO remove above
+
+#Formatting - spacing options
+csharp_space_after_colon_in_inheritance_clause = true # require a space before the colon for bases or interfaces in a type declaration
+csharp_space_after_keywords_in_control_flow_statements = true # require a space after a keyword in a control flow statement such as a for loop
+csharp_space_before_colon_in_inheritance_clause = true # require a space before the colon for bases or interfaces in a type declaration
+csharp_space_between_method_call_empty_parameter_list_parentheses = false # remove space within empty argument list parentheses
+csharp_space_between_method_call_name_and_opening_parenthesis = false # remove space between method call name and opening parenthesis
+csharp_space_between_method_call_parameter_list_parentheses = false # do not place space characters after the opening parenthesis and before the closing parenthesis of a method call
+csharp_space_between_method_declaration_empty_parameter_list_parentheses = false # remove space within empty parameter list parentheses for a method declaration
+csharp_space_between_method_declaration_parameter_list_parentheses = false # place a space character after the opening parenthesis and before the closing parenthesis of a method declaration parameter list
+csharp_space_after_cast = false # require NO space between a cast and the value
+
+#Formatting - wrapping options
+csharp_preserve_single_line_blocks = true # leave code block on single line
+csharp_preserve_single_line_statements = true # leave statements and member declarations on the same line
+
+#Style - Code block preferences
+csharp_prefer_braces = false:suggestion # do not prefer curly braces for one line of code
+dotnet_diagnostic.SA1503.severity = none # SA1503: Braces should not be omitted
+# TODO remove below
+csharp_style_namespace_declarations=file_scoped:none # Namespace declarations should be file scoped, meaning "namespace Name;", not "namespace Name {}"
+# TODO remove above
+# TODO #csharp_style_namespace_declarations=file_scoped:error # Namespace declarations should be file scoped, meaning "namespace Name;", not "namespace Name {}"
+
+#Style - expression bodied member options
+csharp_style_expression_bodied_constructors = false:suggestion # prefer block bodies for constructors
+csharp_style_expression_bodied_methods = false:suggestion # prefer block bodies for methods
+csharp_style_expression_bodied_properties = true:suggestion # prefer expression-bodied members for properties
+csharp_style_expression_bodied_accessors = true:suggestion # prefer expression bodies for accessors
+csharp_style_expression_bodied_lambdas = true:silent # prefer expression bodies for lambdas
+dotnet_diagnostic.RCS1021.severity = none # RCS1021: Convert lambda expression body to expression-body (https://github.com/JosefPihrt/Roslynator/blob/master/docs/analyzers/RCS1021.md)
+
+#Style - expression level options
+csharp_style_inlined_variable_declaration = true:suggestion # prefer out variables to be declared inline in the argument list of a method call when possible
+dotnet_style_predefined_type_for_member_access = true:suggestion # prefer the language keyword for member access expressions, instead of the type name, for types that have a keyword to represent them. Example: int.MinValue vs Int32.MinValue
+
+#Style - Expression-level preferences
+dotnet_style_object_initializer = true:suggestion #prefer objects to be initialized using object initializers when possible
+dotnet_style_prefer_inferred_anonymous_type_member_names = false:suggestion #prefer inferred anonymous type member names
+csharp_prefer_simple_default_expression = true:suggestion # prefer default over default(T)
+dotnet_style_prefer_inferred_tuple_names = false:suggestion # prefer explicit tuple element names
+dotnet_style_prefer_conditional_expression_over_return = false:none
+
+#Style - implicit and explicit types
+csharp_style_var_elsewhere = false:suggestion # do not prefer var over explicit type in all cases, unless overridden by another code style rule
+csharp_style_var_for_built_in_types = true:warning # prefer var is used to declare variables with built-in system types such as int
+csharp_style_var_when_type_is_apparent = true:suggestion # prefer var when the type is already mentioned on the right-hand side of a declaration expression
+
+#Style - language keyword and framework type options
+dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion # prefer the language keyword for local variables, method parameters, and class members, instead of the type name, for types that have a keyword to represent them
+
+#Style - modifier options
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:suggestion # prefer accessibility modifiers to be declared except for public interface members. This will currently not differ from always and will act as future proofing for if C# adds default interface methods.
+
+#Style - Modifier preferences
+csharp_preferred_modifier_order = public,private,protected,internal,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,volatile,async:error #when this rule is set to a list of modifiers, prefer the specified ordering.
+
+#Style - Pattern matching
+csharp_style_pattern_matching_over_as_with_null_check = true:suggestion # prefer pattern matching instead of is expression with type casts
+
+#Style - qualification options
+dotnet_style_qualification_for_field = false:suggestion # prefer fields not to be prefaced with this.
+dotnet_style_qualification_for_method = false:suggestion # prefer methods not to be prefaced with this.
+dotnet_style_qualification_for_property = false:suggestion # prefer properties not to be prefaced with this.
+
+#Comments and documentation
+dotnet_diagnostic.SA1600.severity = none # SA1600: Elements should be documented
+dotnet_diagnostic.SA1604.severity = none # SA1604: Element documentation should have summary
+dotnet_diagnostic.SA1611.severity = none # SA1611: Element parameters should be documented
+dotnet_diagnostic.SA1615.severity = none # SA1615: Element return value should be documented
+dotnet_diagnostic.SA1633.severity = none # SA1633: File should have header
+dotnet_diagnostic.RCS1139.severity = none # RCS1139: Add summary element to documentation comment.
+dotnet_diagnostic.CS1591.severity = none # CS1591: Missing XML comment for publicly visible type or member
+dotnet_diagnostic.CS1573.severity = none # CS1573: Parameter has no matching param tag in the XML comment (but other parameters do)
+dotnet_diagnostic.SA1606.severity = error # SA1606: Element documentation should have summary text. This is only for empty <summary> elements - remove the empty element or put some text in it
+dotnet_diagnostic.SA1614.severity = error # SA1614: Element parameter documentation should have text. This is only for empty <param> elements - remove the empty element or put some text in it
+dotnet_diagnostic.SA1616.severity = error # SA1616: Element return value documentation should have text. This is only for empty <returns> elements - remove the empty element or put some text in it
+dotnet_diagnostic.RCS1228.severity = error # RCS1228: Unused element in documentation comment. This is only for empty elements (e.g. <summary> or <returns>) - remove the empty element or put some text in it
+
+# RCS1049: Simplify boolean comparison (someBoolean == false -> !someBoolean). Why disable: sometimes it's easier to read explicit boolean comparisons, especially when quickly reading dense code
+dotnet_diagnostic.RCS1049.severity = none
+# S1125: Boolean literals should not be redundant. See explanation of RCS1049 above
+dotnet_diagnostic.S1125.severity = none
+# MA0073: Avoid comparison with bool constant
+dotnet_diagnostic.MA0073.severity = none
+
+
+# RCS1155: Use StringComparison when comparing strings.
+dotnet_diagnostic.RCS1155.severity = none
+# MA0006: Use String.Equals instead of equality operator
+dotnet_diagnostic.MA0006.severity = none
+
+# RCS1214: Unnecessary interpolated string.
+dotnet_diagnostic.RCS1214.severity = error
+
+# IDE0058: Expression value is never used
+dotnet_diagnostic.IDE0058.severity = silent
+
+# RCS1179: Unnecessary assignment.
+dotnet_diagnostic.RCS1179.severity = silent
+
+# IDE0001: Simplify name. IDE0002: Simplify member access. Example: C.M1(); vs M1();. Example: System.IO.Path vs Path
+dotnet_diagnostic.IDE0001.severity = error
+dotnet_diagnostic.IDE0002.severity = error
+
+# SA1101: Prefix local calls with this
+dotnet_diagnostic.SA1101.severity = none
+
+# SA1201: Elements should appear in the correct order
+dotnet_diagnostic.SA1201.severity = none
+
+# RCS1211: Remove unnecessary 'else'.
+dotnet_diagnostic.RCS1211.severity = none
+# MA0071: Avoid using redundant else
+dotnet_diagnostic.MA0071.severity = none
+
+# SA1128: Put constructor initializers on their own line
+dotnet_diagnostic.SA1128.severity = none
+
+# CA1848: Use the LoggerMessage delegates
+dotnet_diagnostic.CA1848.severity = silent
+
+# RCS1201: Use method chaining.
+dotnet_diagnostic.RCS1201.severity = suggestion
+
+# SA1413: Use trailing comma in multi-line initializers. This is important to make diffs easy to read in version controls/Git
+dotnet_diagnostic.SA1413.severity = error
+
+# SA1602: Enumeration items should be documented
+dotnet_diagnostic.SA1602.severity = none
+
+# VSTHRD111: Use ConfigureAwait(bool)
+dotnet_diagnostic.VSTHRD111.severity = none
+
+# MA0042: Do not use blocking calls in an async method
+dotnet_diagnostic.MA0042.severity = suggestion
+
+# ----------------------------- #
+# Below are custom naming rules #
+# ----------------------------- #
+
+# This naming style is called "underscore_camel_case" (custom name) and can be referenced later
+dotnet_naming_style.underscore_camel_case.capitalization = camel_case
+dotnet_naming_style.underscore_camel_case.required_prefix = _
+
+# This naming style is called "pascal_case" (custom name) and can be referenced later
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+
+# This naming symbol is called "private_fields" (custom name) and can be referenced later
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+
+# This naming symbol is called "private_const_fields" (custom name) and can be referenced later
+dotnet_naming_symbols.private_const_fields.applicable_kinds = field
+dotnet_naming_symbols.private_const_fields.applicable_accessibilities = private
+dotnet_naming_symbols.private_const_fields.required_modifiers = const
+
+# This rule is called "private_fields_with_underscore_camel_case" (custom name). It uses the above naming symbol and naming style to enforce the naming of private fields to be _fieldName. Note that it also applies to const fields, but we overwrite that later with the "private_const_fields_with_pascal_case" rule.
+dotnet_naming_rule.private_fields_with_underscore_camel_case.symbols = private_fields
+dotnet_naming_rule.private_fields_with_underscore_camel_case.style = underscore_camel_case
+dotnet_naming_rule.private_fields_with_underscore_camel_case.severity = warning
+dotnet_diagnostic.SA1309.severity = none # SA1309: Field names should not begin with underscore
+dotnet_diagnostic.SX1309.severity = warning # SA1309: Field names should begin with underscore
+
+# This rule is called "private_const_fields_with_pascal_case" (custom name). It uses the above naming symbol and naming style to enforce the naming of private const fields to be FieldName.
+dotnet_naming_rule.private_const_fields_with_pascal_case.symbols = private_const_fields
+dotnet_naming_rule.private_const_fields_with_pascal_case.style = pascal_case
+dotnet_naming_rule.private_const_fields_with_pascal_case.severity = warning
+dotnet_diagnostic.SX1309S.severity = none # SA1309S: Static field names should begin with underscore
