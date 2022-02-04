@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Changelog.Data.Options.Database
+﻿namespace Changelog.Data.Options.Database
 {
     public class SQLiteOptions
     {
         /// <summary>
-        /// The connection string to connect to the SQLite database file.
+        /// Gets or sets the connection string to connect to the SQLite database file.
         /// <para/>
         /// <example>
         /// Example:

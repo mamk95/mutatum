@@ -36,7 +36,7 @@ namespace Changelog.Data
                 .FirstOrDefault();
         }
 
-        public List<Release> GetNewestReleases(int releaseLimit = 5, bool includeHiddenProjects = false)
+        public IList<Release> GetNewestReleases(int releaseLimit = 5, bool includeHiddenProjects = false)
         {
             return _context.Releases
                 .Where(r => r.Project.Hidden == false || r.Project.Hidden == includeHiddenProjects)
@@ -59,7 +59,7 @@ namespace Changelog.Data
                 throw new ArgumentException("Do not set the ID field", nameof(release));
             }
 
-            var result = _context.Releases.Add(release).Entity;
+            Release result = _context.Releases.Add(release).Entity;
             _context.SaveChanges();
 
             return result;
@@ -67,7 +67,7 @@ namespace Changelog.Data
 
         public Release UpdateRelease(int id, Release release)
         {
-            var originalRelease = _context.Releases.Find(id);
+            Release originalRelease = _context.Releases.Find(id);
 
             if (originalRelease == null)
             {
@@ -79,7 +79,7 @@ namespace Changelog.Data
                 throw new ArgumentException("Id missmatch in arguments", nameof(release));
             }
 
-            var result = _context.Releases.Update(release).Entity;
+            Release result = _context.Releases.Update(release).Entity;
             _context.SaveChanges();
 
             return result;
@@ -87,7 +87,7 @@ namespace Changelog.Data
 
         public void DeleteReleaseById(int id)
         {
-            var release = _context.Releases.Find(id);
+            Release release = _context.Releases.Find(id);
 
             if (release == null)
             {

@@ -1,4 +1,5 @@
-﻿using Changelog.Data.Database;
+﻿using System.Globalization;
+using Changelog.Data.Database;
 using Changelog.Data.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -7,27 +8,27 @@ using Microsoft.Extensions.Options;
 
 namespace Changelog.Data;
 
-public class SeedTestData
+public static class SeedTestData
 {
-    public static async Task Seed(IServiceProvider services)
+    public static async Task SeedAsync(IServiceProvider services)
     {
-        var context = services.GetService<AppDbContext>();
+        AppDbContext context = services.GetService<AppDbContext>();
 
-        var firstRunConfig = services.GetService<IOptions<FirstRunOptions>>();
+        IOptions<FirstRunOptions> firstRunConfig = services.GetService<IOptions<FirstRunOptions>>();
         if (firstRunConfig == null) return;
 
-        await CreateAdminUser(context, firstRunConfig.Value.AdminEmail, firstRunConfig.Value.AdminPassword);
+        await CreateAdminUserAsync(context, firstRunConfig.Value.AdminEmail, firstRunConfig.Value.AdminPassword);
 
         if (firstRunConfig.Value.SeedWithTestDataBool)
         {
-            await CreateCategories(context);
-            await CreateProjects(context);
-            await CreateReleases(context);
-            await CreateChanges(context);
+            CreateCategories(context);
+            CreateProjects(context);
+            CreateReleases(context);
+            CreateChanges(context);
         }
     }
 
-    private static async Task CreateAdminUser(AppDbContext context, string adminEmail, string adminPassword)
+    private static async Task CreateAdminUserAsync(AppDbContext context, string adminEmail, string adminPassword)
     {
         if (string.IsNullOrEmpty(adminEmail) || string.IsNullOrEmpty(adminPassword))
             return;
@@ -39,9 +40,9 @@ public class SeedTestData
             {
                 Id = Guid.NewGuid().ToString(),
                 UserName = adminEmail,
-                NormalizedUserName = adminEmail.ToUpper(), // This is used as the "Email input" when logging in. Must be upper case
+                NormalizedUserName = adminEmail.ToUpper(CultureInfo.InvariantCulture), // This is used as the "Email input" when logging in. Must be upper case
                 Email = adminEmail,
-                NormalizedEmail = adminEmail.ToUpper(),
+                NormalizedEmail = adminEmail.ToUpper(CultureInfo.InvariantCulture),
                 EmailConfirmed = true,
                 SecurityStamp = Guid.NewGuid().ToString("D"),
                 LockoutEnabled = true, // Will teporarily lock the account if the wrong password is given too many times
@@ -53,29 +54,32 @@ public class SeedTestData
             await userStore.CreateAsync(user);
         }
 
-        await context.SaveChangesAsync();
+        context.SaveChanges();
     }
 
-    private static EntityEntry<Category> CategoryNew, CategoryImproved, CategoryFixed;
-    private static async Task CreateCategories(AppDbContext context)
+    private static EntityEntry<Category> _categoryNew;
+    private static EntityEntry<Category> _categoryImproved;
+    private static EntityEntry<Category> _categoryFixed;
+
+    private static void CreateCategories(AppDbContext context)
     {
         if (!context.Categories.Any())
         {
-            CategoryNew = await context.Categories.AddAsync(new Category
+            _categoryNew = context.Categories.Add(new Category
             {
                 Name = "New",
                 BackgroundColor = "#00ca00",
                 TextColor = "white",
             });
 
-            CategoryImproved = await context.Categories.AddAsync(new Category
+            _categoryImproved = context.Categories.Add(new Category
             {
                 Name = "Improved",
                 BackgroundColor = "#9393ff",
                 TextColor = "white",
             });
 
-            CategoryFixed = await context.Categories.AddAsync(new Category
+            _categoryFixed = context.Categories.Add(new Category
             {
                 Name = "Fixed",
                 BackgroundColor = "#ea00ea",
@@ -83,67 +87,72 @@ public class SeedTestData
             });
         }
 
-        await context.SaveChangesAsync();
+        context.SaveChanges();
     }
 
-    private static EntityEntry<Project> Project1, Project2, Project3, Project4, Project5, Project6, ProjectHidden;
-    private static async Task CreateProjects(AppDbContext context)
+    private static EntityEntry<Project> _project1;
+    private static EntityEntry<Project> _project2;
+
+    private static void CreateProjects(AppDbContext context)
     {
         if (!context.Projects.Any())
         {
-            Project1 = await context.Projects.AddAsync(new Project
+            _project1 = context.Projects.Add(new Project
             {
                 Name = "Project 1",
                 Description = "The first test project",
                 SortOrder = 1,
             });
 
-            Project2 = await context.Projects.AddAsync(new Project
+            _project2 = context.Projects.Add(new Project
             {
                 Name = "Project 2",
                 Description = "The second test project",
                 SortOrder = 2,
             });
 
-            Project3 = await context.Projects.AddAsync(new Project
+            context.Projects.Add(new Project
             {
                 Name = "Project 3",
             });
 
-            Project4 = await context.Projects.AddAsync(new Project
+            context.Projects.Add(new Project
             {
                 Name = "Project 4",
             });
 
-            Project5 = await context.Projects.AddAsync(new Project
+            context.Projects.Add(new Project
             {
                 Name = "Project 5",
             });
 
-            Project6 = await context.Projects.AddAsync(new Project
+            context.Projects.Add(new Project
             {
                 Name = "Project 6",
             });
 
-            ProjectHidden = await context.Projects.AddAsync(new Project
+            context.Projects.Add(new Project
             {
                 Name = "Hidden project",
                 Hidden = true,
             });
         }
 
-        await context.SaveChangesAsync();
+        context.SaveChanges();
     }
 
-    private static EntityEntry<Release> Release1Project1, Release2Project1, Release3Project1, Release1Project2;
+    private static EntityEntry<Release> _release1Project1;
+    private static EntityEntry<Release> _release2Project1;
+    private static EntityEntry<Release> _release3Project1;
+    private static EntityEntry<Release> _release1Project2;
 
-    private static async Task CreateReleases(AppDbContext context)
+    private static void CreateReleases(AppDbContext context)
     {
         if (!context.Releases.Any())
         {
-            Release1Project1 = await context.Releases.AddAsync(new Release
+            _release1Project1 = context.Releases.Add(new Release
             {
-                ProjectId = Project1.Entity.Id,
+                ProjectId = _project1.Entity.Id,
                 Title = "First release",
                 ShortDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
                 LongDescriptionMarkdown = "*Markdown* **here**",
@@ -155,9 +164,9 @@ public class SeedTestData
                 ReleaseDay = 13,
             });
 
-            Release2Project1 = await context.Releases.AddAsync(new Release
+            _release2Project1 = context.Releases.Add(new Release
             {
-                ProjectId = Project1.Entity.Id,
+                ProjectId = _project1.Entity.Id,
                 ShortDescription = "Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
                 LongDescriptionMarkdown = "Sed ut *perspiciatis* unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto **beatae vitae dicta sunt** (!) explicabo 😃 Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt 👏👏👏",
                 Major = 1,
@@ -168,9 +177,9 @@ public class SeedTestData
                 ReleaseDay = 14,
             });
 
-            Release3Project1 = await context.Releases.AddAsync(new Release
+            _release3Project1 = context.Releases.Add(new Release
             {
-                ProjectId = Project1.Entity.Id,
+                ProjectId = _project1.Entity.Id,
                 Title = "Added users",
                 ShortDescription = "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
                 LongDescriptionMarkdown = "*Markdown* **here**",
@@ -182,9 +191,9 @@ public class SeedTestData
                 ReleaseDay = 23,
             });
 
-            Release1Project2 = await context.Releases.AddAsync(new Release
+            _release1Project2 = context.Releases.Add(new Release
             {
-                ProjectId = Project2.Entity.Id,
+                ProjectId = _project2.Entity.Id,
                 Title = "Init",
                 Major = 0,
                 Minor = 0,
@@ -195,80 +204,80 @@ public class SeedTestData
             });
         }
 
-        await context.SaveChangesAsync();
+        context.SaveChanges();
     }
 
-    private static async Task CreateChanges(AppDbContext context)
+    private static void CreateChanges(AppDbContext context)
     {
         if (!context.Changes.Any())
         {
-            await context.Changes.AddAsync(new Change
+            context.Changes.Add(new Change
             {
-                CategoryId = CategoryFixed.Entity.Id,
-                ReleaseId = Release1Project1.Entity.Id,
+                CategoryId = _categoryFixed.Entity.Id,
+                ReleaseId = _release1Project1.Entity.Id,
                 Title = "Squashes bugs",
-                Markdown = "**bold text**"
+                Markdown = "**bold text**",
             });
 
-            await context.Changes.AddAsync(new Change
+            context.Changes.Add(new Change
             {
-                CategoryId = CategoryNew.Entity.Id,
-                ReleaseId = Release1Project1.Entity.Id,
+                CategoryId = _categoryNew.Entity.Id,
+                ReleaseId = _release1Project1.Entity.Id,
                 Title = "Added changelog",
-                Markdown = "Markdown here, *italic*, **bold**\n\n1. List item 1\n2. List item 2\n\n![The San Juan Mountains are beautiful!](https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Whatsapp_chatting_outdoor_20180808.jpg/320px-Whatsapp_chatting_outdoor_20180808.jpg)"
+                Markdown = "Markdown here, *italic*, **bold**\n\n1. List item 1\n2. List item 2\n\n![The San Juan Mountains are beautiful!](https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Whatsapp_chatting_outdoor_20180808.jpg/320px-Whatsapp_chatting_outdoor_20180808.jpg)",
             });
 
-            await context.Changes.AddAsync(new Change
+            context.Changes.Add(new Change
             {
-                CategoryId = CategoryNew.Entity.Id,
-                ReleaseId = Release1Project1.Entity.Id,
+                CategoryId = _categoryNew.Entity.Id,
+                ReleaseId = _release1Project1.Entity.Id,
                 Title = "Added tests",
-                Markdown = "*italic text*"
+                Markdown = "*italic text*",
             });
 
-            await context.Changes.AddAsync(new Change
+            context.Changes.Add(new Change
             {
-                CategoryId = CategoryFixed.Entity.Id,
-                ReleaseId = Release2Project1.Entity.Id,
-                Title = "Fixed bug"
+                CategoryId = _categoryFixed.Entity.Id,
+                ReleaseId = _release2Project1.Entity.Id,
+                Title = "Fixed bug",
             });
 
-            await context.Changes.AddAsync(new Change
+            context.Changes.Add(new Change
             {
-                CategoryId = CategoryImproved.Entity.Id,
-                ReleaseId = Release2Project1.Entity.Id,
-                Title = "Improved changelog"
+                CategoryId = _categoryImproved.Entity.Id,
+                ReleaseId = _release2Project1.Entity.Id,
+                Title = "Improved changelog",
             });
 
-            await context.Changes.AddAsync(new Change
+            context.Changes.Add(new Change
             {
-                CategoryId = CategoryImproved.Entity.Id,
-                ReleaseId = Release3Project1.Entity.Id,
-                Title = "Easier login"
+                CategoryId = _categoryImproved.Entity.Id,
+                ReleaseId = _release3Project1.Entity.Id,
+                Title = "Easier login",
             });
 
-            await context.Changes.AddAsync(new Change
+            context.Changes.Add(new Change
             {
-                CategoryId = CategoryFixed.Entity.Id,
-                ReleaseId = Release3Project1.Entity.Id,
-                Title = "Remove signout bug"
+                CategoryId = _categoryFixed.Entity.Id,
+                ReleaseId = _release3Project1.Entity.Id,
+                Title = "Remove signout bug",
             });
 
-            await context.Changes.AddAsync(new Change
+            context.Changes.Add(new Change
             {
-                CategoryId = CategoryImproved.Entity.Id,
-                ReleaseId = Release3Project1.Entity.Id,
-                Title = "Can directly click on button"
+                CategoryId = _categoryImproved.Entity.Id,
+                ReleaseId = _release3Project1.Entity.Id,
+                Title = "Can directly click on button",
             });
 
-            await context.Changes.AddAsync(new Change
+            context.Changes.Add(new Change
             {
-                CategoryId = CategoryNew.Entity.Id,
-                ReleaseId = Release1Project2.Entity.Id,
-                Title = "Init"
+                CategoryId = _categoryNew.Entity.Id,
+                ReleaseId = _release1Project2.Entity.Id,
+                Title = "Init",
             });
         }
 
-        await context.SaveChangesAsync();
+        context.SaveChanges();
     }
 }

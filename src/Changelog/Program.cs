@@ -1,18 +1,14 @@
-using Changelog;
+﻿using Changelog;
 using Changelog.Areas.Identity;
 using Changelog.Data;
 using Changelog.Data.Database;
 using Changelog.Data.Options;
 using Changelog.Data.Options.Database;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 DatabaseOptions dbOptions = builder.Configuration.GetSection(DatabaseOptions.AppsettingsSectionName).Get<DatabaseOptions>();
 
@@ -24,13 +20,12 @@ else if (dbOptions.Provider == "MySQL")
 {
     var serverVersion = ServerVersion.AutoDetect(dbOptions.MySQL.ConnectionString);
     if (serverVersion.Type == ServerType.MySql && serverVersion.Version.Major < 8)
-        throw new Exception($"Only MySQL v8.0.0 or newer is supported. Please see the Mutatum docs. Your server seems to be running v{serverVersion.Version}.");
+        throw new NotSupportedException($"Only MySQL v8.0.0 or newer is supported. Please see the Mutatum docs. Your server seems to be running v{serverVersion.Version}.");
 
     builder.Services.AddDbContext<AppDbContext, MySqlDbContext>(options =>
             options.UseMySql(
                         dbOptions.MySQL.ConnectionString,
-                        serverVersion)
-    );
+                        serverVersion));
 }
 else if (dbOptions.Provider == "MariaDB")
 {
@@ -39,8 +34,7 @@ else if (dbOptions.Provider == "MariaDB")
     builder.Services.AddDbContext<AppDbContext, MariaDbContext>(options =>
             options.UseMySql(
                         dbOptions.MariaDB.ConnectionString,
-                        serverVersion)
-    );
+                        serverVersion));
 }
 else if (dbOptions.Provider == "MsSQL")
 {
@@ -56,10 +50,11 @@ else if (dbOptions.Provider == "SQLite")
 }
 else
 {
-    throw new Exception($"Unknown database provider '{dbOptions.Provider}'. Please read the Mutatum docs.");
+    throw new NotSupportedException($"Unknown database provider '{dbOptions.Provider}'. Please read the Mutatum docs.");
 }
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 builder.Services
     .AddDefaultIdentity<ApplicationUser>(options =>
     {
@@ -78,33 +73,30 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
 
-{ // Data services
-    builder.Services.AddScoped<ProjectService>();
-    builder.Services.AddScoped<ReleaseService>();
-    builder.Services.AddScoped<CategoryService>();
-}
+// Data services
+builder.Services.AddScoped<ProjectService>();
+builder.Services.AddScoped<ReleaseService>();
+builder.Services.AddScoped<CategoryService>();
 
-{ // Reading AppSettings options
-    builder.Services.Configure<BrandingOptions>(builder.Configuration.GetSection(BrandingOptions.AppsettingsSectionName));
-    builder.Services.Configure<FirstRunOptions>(builder.Configuration.GetSection(FirstRunOptions.AppsettingsSectionName));
-    builder.Services.Configure<AccountRateLimitProtectionOptions>(builder.Configuration.GetSection(AccountRateLimitProtectionOptions.AppsettingsSectionName));
-    builder.Services.Configure<DatabaseOptions>(builder.Configuration.GetSection(DatabaseOptions.AppsettingsSectionName));
-}
+// Reading AppSettings options
+builder.Services.Configure<BrandingOptions>(builder.Configuration.GetSection(BrandingOptions.AppsettingsSectionName));
+builder.Services.Configure<FirstRunOptions>(builder.Configuration.GetSection(FirstRunOptions.AppsettingsSectionName));
+builder.Services.Configure<AccountRateLimitProtectionOptions>(builder.Configuration.GetSection(AccountRateLimitProtectionOptions.AppsettingsSectionName));
+builder.Services.Configure<DatabaseOptions>(builder.Configuration.GetSection(DatabaseOptions.AppsettingsSectionName));
 
 builder.Services.AddScoped<AccountRateLimitProtection>();
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-);
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "AllowAnyOrigin", builder => builder.AllowAnyOrigin());
 });
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
-await SeedTestData.Seed(app.Services.CreateScope().ServiceProvider);
+await SeedTestData.SeedAsync(app.Services.CreateScope().ServiceProvider);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -114,6 +106,7 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Error");
+
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }

@@ -36,7 +36,7 @@ namespace Changelog.Data
                 TextColor = textColor,
             };
 
-            var result = _context.Categories.Add(category).Entity;
+            Category result = _context.Categories.Add(category).Entity;
             _context.SaveChanges();
 
             return result;
@@ -44,7 +44,7 @@ namespace Changelog.Data
 
         public Category UpdateCategory(int id, string name, string backgroundColor, string textColor)
         {
-            var category = _context.Categories.Find(id);
+            Category category = _context.Categories.Find(id);
 
             if (category == null)
             {
@@ -55,7 +55,7 @@ namespace Changelog.Data
             category.BackgroundColor = backgroundColor;
             category.TextColor = textColor;
 
-            var result = _context.Categories.Update(category).Entity;
+            Category result = _context.Categories.Update(category).Entity;
             _context.SaveChanges();
 
             return result;
@@ -63,7 +63,10 @@ namespace Changelog.Data
 
         public void DeleteCategoryById(int id)
         {
-            var category = _context.Categories.Where(c => c.Id == id).Include(c => c.Changes).FirstOrDefault();
+            Category category = _context.Categories
+                .Where(c => c.Id == id)
+                .Include(c => c.Changes)
+                .FirstOrDefault();
 
             if (category == null)
             {
@@ -72,7 +75,7 @@ namespace Changelog.Data
 
             if (category.Changes.Count > 0)
             {
-                throw new ArgumentException("Cannot delete category with active changes");
+                throw new ArgumentException("Cannot delete category with active changes", nameof(id));
             }
 
             _context.Categories.Remove(category);

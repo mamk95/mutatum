@@ -11,13 +11,15 @@ namespace Changelog.Data
         public string Name { get; set; }
 
         /// <summary>
-        /// Can be a CSS color name or a hex color (with included hashtag before the hex)
+        /// Gets or sets the background color of the category.
+        /// Can be a CSS color name or a hex color (with included hashtag before the hex).
         /// </summary>
         [Required]
         public string BackgroundColor { get; set; }
 
         /// <summary>
-        /// Can be a CSS color name or a hex color (with included hashtag before the hex)
+        /// Gets or sets the text color of the category.
+        /// Can be a CSS color name or a hex color (with included hashtag before the hex).
         /// </summary>
         [Required]
         public string TextColor { get; set; }

@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Changelog.Data.Options.Database
+﻿namespace Changelog.Data.Options.Database
 {
     public class MariaDbOptions
     {
         /// <summary>
-        /// The connection string to connect to the MariaDB database server and database.
+        /// Gets or sets the connection string to connect to the MariaDB
+        /// database server and database.
         /// <para/>
         /// <example>
         /// Example:

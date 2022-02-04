@@ -3,5 +3,6 @@
 namespace Changelog.Data
 {
     public class ApplicationUser : IdentityUser
-    { }
+    {
+    }
 }

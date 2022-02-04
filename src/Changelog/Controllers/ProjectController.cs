@@ -1,5 +1,4 @@
 ﻿using Changelog.Data;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Changelog.Controllers
@@ -18,7 +17,7 @@ namespace Changelog.Controllers
         [HttpGet("{id}")]
         public ActionResult<Project> GetProjectById(int id)
         {
-            var project = _projectService.GetProjectById(id);
+            Project project = _projectService.GetProjectById(id);
 
             if (project == null)
                 return NotFound();

@@ -79,7 +79,7 @@ namespace Changelog.Data
                 SortOrder = sortOrder,
             };
 
-            var result = _context.Projects.Add(project).Entity;
+            Project result = _context.Projects.Add(project).Entity;
             _context.SaveChanges();
 
             return result;
@@ -87,7 +87,7 @@ namespace Changelog.Data
 
         public Project UpdateProject(int id, string name, string description, bool hidden, int sortOrder)
         {
-            var project = _context.Projects.Find(id);
+            Project project = _context.Projects.Find(id);
 
             if (project == null)
             {
@@ -99,7 +99,7 @@ namespace Changelog.Data
             project.Hidden = hidden;
             project.SortOrder = sortOrder;
 
-            var result = _context.Projects.Update(project).Entity;
+            Project result = _context.Projects.Update(project).Entity;
             _context.SaveChanges();
 
             return result;
@@ -107,7 +107,7 @@ namespace Changelog.Data
 
         public void DeleteProjectById(int id)
         {
-            var project = _context.Projects.Find(id);
+            Project project = _context.Projects.Find(id);
 
             if (project == null)
             {

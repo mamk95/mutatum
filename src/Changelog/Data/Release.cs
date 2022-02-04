@@ -14,7 +14,7 @@ namespace Changelog.Data
 
         public Project Project { get; set; }
 
-        public string? Title { get; set; }
+        public string Title { get; set; }
 
         [MaxLength(200)]
         public string ShortDescription { get; set; }
@@ -48,13 +48,7 @@ namespace Changelog.Data
         public int ReleaseDay { get; set; }
 
         [NotMapped]
-        public string ReleaseDate
-        {
-            get
-            {
-                return $"{ReleaseYear}/{ReleaseMonth.ToString().PadLeft(2, '0')}/{ReleaseDay.ToString().PadLeft(2, '0')}";
-            }
-        }
+        public string ReleaseDate => $"{ReleaseYear}/{ReleaseMonth.ToString().PadLeft(2, '0')}/{ReleaseDay.ToString().PadLeft(2, '0')}";
 
         public IList<Change> Changes { get; set; } = new List<Change>();
     }

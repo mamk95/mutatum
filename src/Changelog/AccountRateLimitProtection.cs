@@ -25,7 +25,7 @@ namespace Changelog
         {
             get
             {
-                var level = ThreatLevel.Low;
+                ThreatLevel level = ThreatLevel.Low;
 
                 if (RecentSuccessfulLogins > _options.Value.RecentSuccessfulLoginsLevel1BumpInt)
                 {
@@ -56,7 +56,7 @@ namespace Changelog
 
         public void AddSuccessfulLogin()
         {
-            var cacheEntryOptions = new MemoryCacheEntryOptions()
+            MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions()
                     .SetAbsoluteExpiration(TimeSpan.FromMinutes(_options.Value.ExpirationInMinutesInt)); // If no new successful logins happen within x minutes, this value is cleared
 
             if (!_memoryCache.TryGetValue(CacheKeySuccessfulLogins, out int recentSuccessfulLogins))
@@ -72,7 +72,7 @@ namespace Changelog
 
         public void AddFailedLogin()
         {
-            var cacheEntryOptions = new MemoryCacheEntryOptions()
+            MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions()
                     .SetAbsoluteExpiration(TimeSpan.FromMinutes(_options.Value.ExpirationInMinutesInt)); // If no new failed logins happen within x minutes, this value is cleared
 
             if (!_memoryCache.TryGetValue(CacheKeyFailedLogins, out int recentFailedLogins))
@@ -88,7 +88,7 @@ namespace Changelog
 
         public void AddAccountRegistration()
         {
-            var cacheEntryOptions = new MemoryCacheEntryOptions()
+            MemoryCacheEntryOptions cacheEntryOptions = new MemoryCacheEntryOptions()
                     .SetAbsoluteExpiration(TimeSpan.FromMinutes(_options.Value.ExpirationInMinutesInt)); // If no new registrations happen within x minutes, this value is cleared
 
             if (!_memoryCache.TryGetValue(CacheKeyRegistrations, out int recentRegistrations))
@@ -131,7 +131,7 @@ namespace Changelog
 
         private static ThreatLevel IncreaseThreatLevel(ThreatLevel level, int increaseBy = 1)
         {
-            var newLevel = level + increaseBy;
+            ThreatLevel newLevel = level + increaseBy;
 
             if (newLevel < ThreatLevel.Low) return ThreatLevel.Low;
             else if (newLevel > ThreatLevel.High) return ThreatLevel.High;

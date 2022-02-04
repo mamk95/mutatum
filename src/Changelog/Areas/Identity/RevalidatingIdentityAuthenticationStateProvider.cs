@@ -1,14 +1,14 @@
-using Microsoft.AspNetCore.Components;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using System.Security.Claims;
 
 namespace Changelog.Areas.Identity
 {
     public class RevalidatingIdentityAuthenticationStateProvider<TUser>
-        : RevalidatingServerAuthenticationStateProvider where TUser : class
+        : RevalidatingServerAuthenticationStateProvider
+        where TUser : class
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly IdentityOptions _options;
@@ -29,10 +29,10 @@ namespace Changelog.Areas.Identity
             AuthenticationState authenticationState, CancellationToken cancellationToken)
         {
             // Get the user manager from a new scope to ensure it fetches fresh data
-            var scope = _scopeFactory.CreateScope();
+            IServiceScope scope = _scopeFactory.CreateScope();
             try
             {
-                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<TUser>>();
+                UserManager<TUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<TUser>>();
                 return await ValidateSecurityStampAsync(userManager, authenticationState.User);
             }
             finally
@@ -50,7 +50,7 @@ namespace Changelog.Areas.Identity
 
         private async Task<bool> ValidateSecurityStampAsync(UserManager<TUser> userManager, ClaimsPrincipal principal)
         {
-            var user = await userManager.GetUserAsync(principal);
+            TUser user = await userManager.GetUserAsync(principal);
             if (user == null)
             {
                 return false;
