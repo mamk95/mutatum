@@ -21,10 +21,11 @@ namespace Changelog.Data
                 .FirstOrDefault();
         }
 
-        public Release GetNewestRelease(bool includeHiddenProjects = false)
+        public Release GetNewestRelease(bool includeHidden = false)
         {
             return _context.Releases
-                .Where(r => r.Project.Hidden == false || r.Project.Hidden == includeHiddenProjects)
+                .Where(r => r.Hidden == false || r.Hidden == includeHidden) // If includeHidden==true, we want both hidden and non-hidden releases
+                .Where(r => r.Project.Hidden == false || r.Project.Hidden == includeHidden) // If includeHidden==true, we want both hidden and non-hidden projects
                 .OrderByDescending(r => r.ReleaseYear)
                     .ThenByDescending(r => r.ReleaseMonth)
                     .ThenByDescending(r => r.ReleaseDay)
@@ -36,10 +37,11 @@ namespace Changelog.Data
                 .FirstOrDefault();
         }
 
-        public IList<Release> GetNewestReleases(int releaseLimit = 5, bool includeHiddenProjects = false)
+        public IList<Release> GetNewestReleases(int releaseLimit = 5, bool includeHidden = false)
         {
             return _context.Releases
-                .Where(r => r.Project.Hidden == false || r.Project.Hidden == includeHiddenProjects)
+                .Where(r => r.Hidden == false || r.Hidden == includeHidden) // If includeHidden==true, we want both hidden and non-hidden releases
+                .Where(r => r.Project.Hidden == false || r.Project.Hidden == includeHidden) // If includeHidden==true, we want both hidden and non-hidden projects
                 .OrderByDescending(r => r.ReleaseYear)
                     .ThenByDescending(r => r.ReleaseMonth)
                     .ThenByDescending(r => r.ReleaseDay)

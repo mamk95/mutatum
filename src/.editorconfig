@@ -215,6 +215,9 @@ dotnet_diagnostic.VSTHRD111.severity = none
 # MA0042: Do not use blocking calls in an async method
 dotnet_diagnostic.MA0042.severity = suggestion
 
+# MA0029: Combine LINQ methods. Disable this because the code often looks cleaner with multiple Where clauses
+dotnet_diagnostic.MA0029.severity = none
+
 # ----------------------------- #
 # Below are custom naming rules #
 # ----------------------------- #

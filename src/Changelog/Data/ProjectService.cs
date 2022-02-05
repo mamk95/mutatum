@@ -28,10 +28,14 @@ namespace Changelog.Data
         public IList<(Project project, int numberOfReleases)> GetProjectsWithNumberOfReleases(int projectLimit = 3, bool includeHidden = false)
         {
             return _context.Projects
-                .Where(p => p.Hidden == false || p.Hidden == includeHidden)
+                .Where(p => p.Hidden == false || p.Hidden == includeHidden) // If includeHidden==true, we want both hidden and non-hidden projects
                 .OrderByDescending(p => p.Releases.Count)
                 .Take(projectLimit)
-                .Select(p => new { project = p, numberOfReleases = p.Releases.Count })
+                .Select(p => new
+                {
+                    project = p,
+                    numberOfReleases = p.Releases.Count(r => r.Hidden == false || r.Hidden == includeHidden), // If includeHidden==true, we want both hidden and non-hidden releases
+                })
                 .AsEnumerable()
                 .Select(x => (project: x.project, numberOfReleases: x.numberOfReleases))
                 .ToList();
@@ -43,6 +47,7 @@ namespace Changelog.Data
                 .Where(p => p.Hidden == false || p.Hidden == includeHidden)
                 .OrderBy(p => p.SortOrder)
                 .Include(p => p.Releases
+                    .Where(r => r.Hidden == false || r.Hidden == includeHidden) // If includeHidden==true, we want both hidden and non-hidden releases
                     .OrderByDescending(r => r.ReleaseYear)
                     .ThenByDescending(r => r.ReleaseMonth)
                     .ThenByDescending(r => r.ReleaseDay)
@@ -53,11 +58,13 @@ namespace Changelog.Data
                 .ToList();
         }
 
-        public Project GetProjectById(int id)
+        public Project GetProjectById(int id, bool includeHidden = false)
         {
             return _context.Projects
                 .Where(p => p.Id == id)
+                .Where(p => p.Hidden == false || p.Hidden == includeHidden) // If includeHidden==true, we want both hidden and non-hidden projects
                 .Include(p => p.Releases
+                    .Where(r => r.Hidden == false || r.Hidden == includeHidden) // If includeHidden==true, we want both hidden and non-hidden releases
                     .OrderByDescending(r => r.ReleaseYear)
                     .ThenByDescending(r => r.ReleaseMonth)
                     .ThenByDescending(r => r.ReleaseDay)

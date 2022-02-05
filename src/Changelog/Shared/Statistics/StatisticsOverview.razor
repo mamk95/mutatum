@@ -28,6 +28,6 @@
 
     protected override void OnInitialized()
     {
-        newestRelease = _releaseService.GetNewestRelease(includeHiddenProjects: false);
+        newestRelease = _releaseService.GetNewestRelease(includeHidden: false);
     }
 }

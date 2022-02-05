@@ -32,6 +32,6 @@ else
 
     protected override void OnInitialized()
     {
-        newestReleases = _releaseService.GetNewestReleases(releaseLimit: 4, includeHiddenProjects: false);
+        newestReleases = _releaseService.GetNewestReleases(releaseLimit: 4, includeHidden: false);
     }
 }

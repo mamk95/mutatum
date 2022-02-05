@@ -17,7 +17,7 @@ namespace Changelog.Controllers
         [HttpGet("{id}")]
         public ActionResult<Project> GetProjectById(int id)
         {
-            Project project = _projectService.GetProjectById(id);
+            Project project = _projectService.GetProjectById(id, includeHidden: false);
 
             if (project == null)
                 return NotFound();

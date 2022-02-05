@@ -16,6 +16,8 @@ namespace Changelog.Data
 
         public string Title { get; set; }
 
+        public bool Hidden { get; set; }
+
         [MaxLength(200)]
         public string ShortDescription { get; set; }
 

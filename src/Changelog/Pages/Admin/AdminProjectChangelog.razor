@@ -17,7 +17,13 @@ else if (project == null)
 else
 {
     <div>
-        <h2 class="d-inline">Changelog: @project.Name</h2>
+        <h2 class="d-inline">
+            Changelog: @project.Name
+            @if (project.Hidden)
+            {
+                <span>&nbsp;(Hidden)</span>
+            }
+        </h2>
 
         <a aria-label="Edit project" class="mx-2" href="@($"/admin/project/{@project.Id}/edit")">
             <span class="oi oi-pencil" aria-hidden="true"></span>
@@ -49,7 +55,7 @@ else
 
     protected override void OnParametersSet()
     {
-        project = _projectService.GetProjectById(projectId);
+        project = _projectService.GetProjectById(projectId, includeHidden: true);
 
         if (project == null)
         {

@@ -8,6 +8,12 @@
 </div>
 
 <div class="mb-3">
+    <InputCheckbox id="hidden" @bind-Value="release.Hidden" />
+    <label for="hidden" class="form-label">Hidden/disabled</label>
+
+</div>
+
+<div class="mb-3">
     <label for="shortdesc" class="form-label">Short description</label>
 
     <InputTextArea id="shortdesc" @bind-Value="release.ShortDescription" class="form-control" />

@@ -41,9 +41,9 @@ else
 
     protected override void OnParametersSet()
     {
-        project = _projectService.GetProjectById(projectId);
+        project = _projectService.GetProjectById(projectId, includeHidden: false);
 
-        if (project == null || project.Hidden)
+        if (project == null)
         {
             project = null;
             failedToLoad = true;
