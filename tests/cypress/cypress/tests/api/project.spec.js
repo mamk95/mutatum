@@ -15,11 +15,11 @@ describe('API', () => {
             });
     });
 
-    it('can read new empty project', () => {
+    it('can read new empty visible project', () => {
         const projectName = `Cypress name ** ${new Date().getTime()}`;
         const projectDesc = `Cypress desc ${new Date().getTime() + 1}`;
         const projectPriority = 996999;
-        const projectHidden = Math.random() < 0.5; // random bool
+        const projectHidden = false;
 
         cy.login();
 
@@ -44,6 +44,33 @@ describe('API', () => {
                         expect(response.body.sortOrder).to.eq(projectPriority);
                         expect(response.body.hidden).to.eq(projectHidden);
                         expect(response.body.releases).to.have.length(0);
+                    });
+            });
+    });
+
+    it('cannot read hidden project', () => {
+        const projectName = `Cypress name ** ${new Date().getTime()}`;
+        const projectDesc = `Cypress desc ${new Date().getTime() + 1}`;
+        const projectPriority = 996999;
+        const projectHidden = true;
+
+        cy.login();
+
+        createProject(projectName, projectDesc, projectPriority, projectHidden);
+
+        cy.visit('/admin/project');
+
+        cy.get('table')
+            .find('tbody tr')
+            .contains(projectName) // The project name table cell
+            .parent('tr') // The project row
+            .find('td')
+            .first() // The project ID is the first cell in the row
+            .as('projectId')
+            .then(function () {
+                cy.request({ url: `/api/project/${this.projectId.text()}`, failOnStatusCode: false })
+                    .should((response) => {
+                        expect(response.status).to.eq(404);
                     });
             });
     });
