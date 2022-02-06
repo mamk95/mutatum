@@ -78,6 +78,8 @@ describe('Account', () => {
             .contains('Click to activate')
             .click();
 
+        cy.wait(1000); // Wait for the account to be activated. Can be slow depending on the database
+
         cy.get('table')
             .contains('new-account@example.com')
             .parent('tr')
@@ -134,6 +136,8 @@ describe('Account', () => {
 
         cy.get('.modal .btn-danger').contains('Delete').click();
 
+        cy.wait(1000); // Wait for the account to be deleted. Can be slow depending on the database
+
         cy.contains('new-account@example.com').should('not.exist');
 
         // Login with deleted account
@@ -161,6 +165,8 @@ describe('Account', () => {
             .click();
 
         cy.get('.modal .btn-danger').contains('Delete').click();
+
+        cy.wait(1000); // Wait for the account to be deleted. Can be slow depending on the database
 
         // Login with deleted account
         cy.clearCookie('.AspNetCore.Identity.Application');
