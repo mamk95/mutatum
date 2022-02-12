@@ -2,29 +2,15 @@ import { createProject } from '../../support/project';
 import { createRelease } from '../../support/release';
 
 const projectName = `Cypress name ** release ${new Date().getTime()}`;
+const projectSlug = `cyp${new Date().getTime()}`;
 const projectDesc = `Cypress desc ${new Date().getTime() + 1}`;
 const projectPriority = 997999;
 const projectHidden = false;
-let projectId = undefined;
 
-describe('Release', () => {
+describe('UI - Release', () => {
     before(() => {
         cy.login();
-        createProject(projectName, projectDesc, projectPriority, projectHidden);
-
-        cy.visit('/admin/project');
-
-        // Get the project ID
-        cy.get('table')
-            .find('tbody tr')
-            .contains(projectName) // The project name table cell
-            .parent('tr') // The project row
-            .find('td')
-            .first()
-            .as('projectId')
-            .then(function () {
-                projectId = +this.projectId.text();
-            });
+        createProject(projectName, projectSlug, projectDesc, projectPriority, projectHidden);
     });
 
     after(() => {
@@ -45,7 +31,7 @@ describe('Release', () => {
 
         cy.login();
 
-        createRelease(projectId, releaseTitle, releaseHidden, releaseShortDesc, releaseLongDesc, releaseMajor, releaseMinor, releasePatch, releaseYear, releaseMonth, releaseDay);
+        createRelease(projectSlug, releaseTitle, releaseHidden, releaseShortDesc, releaseLongDesc, releaseMajor, releaseMinor, releasePatch, releaseYear, releaseMonth, releaseDay);
 
         cy.get('.release-item')
             .contains(releaseTitle)
@@ -67,7 +53,7 @@ describe('Release', () => {
             .should('eq', releaseLongDesc);
 
         // Test that it is visible from the normal user's release view
-        cy.visit(`/project/${projectId}`);
+        cy.visit(`/project/${projectSlug}`);
         cy.get('.release-item')
             .contains(releaseTitle);
     });
@@ -83,7 +69,7 @@ describe('Release', () => {
 
         cy.login();
 
-        createRelease(projectId, releaseTitle, releaseHidden, releaseShortDesc, releaseLongDesc, null, null, null, releaseYear, releaseMonth, releaseDay);
+        createRelease(projectSlug, releaseTitle, releaseHidden, releaseShortDesc, releaseLongDesc, null, null, null, releaseYear, releaseMonth, releaseDay);
 
         cy.get('.release-item')
             .contains(releaseTitle)
@@ -116,7 +102,7 @@ describe('Release', () => {
 
         cy.login();
 
-        createRelease(projectId, releaseTitle, releaseHidden, releaseShortDesc, releaseLongDesc, null, null, null, releaseYear, releaseMonth, releaseDay);
+        createRelease(projectSlug, releaseTitle, releaseHidden, releaseShortDesc, releaseLongDesc, null, null, null, releaseYear, releaseMonth, releaseDay);
 
         cy.get('.release-item')
             .contains(`${releaseTitle} (Hidden)`)
@@ -138,7 +124,7 @@ describe('Release', () => {
             .should('eq', releaseLongDesc);
 
         // Test that it is not visible from the normal user's release view
-        cy.visit(`/project/${projectId}`);
+        cy.visit(`/project/${projectSlug}`);
         cy.get('.release-item')
             .should('not.contain', releaseTitle);
     });
@@ -154,7 +140,7 @@ describe('Release', () => {
 
         cy.login();
 
-        createRelease(projectId, releaseTitle, releaseHidden, releaseShortDesc, releaseLongDesc, null, null, null, releaseYear, releaseMonth, releaseDay);
+        createRelease(projectSlug, releaseTitle, releaseHidden, releaseShortDesc, releaseLongDesc, null, null, null, releaseYear, releaseMonth, releaseDay);
         cy.waitToAvoidDetachedElements();
 
         cy.get('.release-item')

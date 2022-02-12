@@ -1,4 +1,4 @@
-export function createProject(projectName, projectDesc, projectPriority, projectHidden) {
+export function createProject(projectName, projectSlug, projectDesc, projectPriority, projectHidden) {
     cy.visit('/admin/project');
 
     cy.waitToAvoidDetachedElements();
@@ -7,6 +7,7 @@ export function createProject(projectName, projectDesc, projectPriority, project
 
     cy.waitToAvoidDetachedElements();
     cy.get('input#name').type(projectName).should('have.value', projectName);
+    cy.get('input#slug').type(projectSlug).should('have.value', projectSlug);
     cy.get('input#desc').type(projectDesc).should('have.value', projectDesc);
     cy.get('input#sort').clear().type(projectPriority).should('have.value', projectPriority);
 

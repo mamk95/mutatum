@@ -11,7 +11,7 @@ function registerAccount(email, password, verifyRegistrationConfirmation = true)
     }
 }
 
-describe('Account', () => {
+describe('UI - Account', () => {
     beforeEach(() => {
         // Remove auth cookie in case Cypress has logged us in in another test
         cy.clearCookie('.AspNetCore.Identity.Application');

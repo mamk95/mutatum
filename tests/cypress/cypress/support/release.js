@@ -1,9 +1,9 @@
-export function createRelease(projectId, title, hidden, shortDesc, longDesc, versionMajor, versionMinor, versionPatch, releaseYear, releaseMonth, releaseDay) {
-    cy.visit(`/admin/project/${projectId}`);
+export function createRelease(projectSlug, title, hidden, shortDesc, longDesc, versionMajor, versionMinor, versionPatch, releaseYear, releaseMonth, releaseDay) {
+    cy.visit(`/admin/project/${projectSlug}`);
 
     cy.waitToAvoidDetachedElements();
     cy.get('a').contains('Create new release').click();
-    cy.url().should('eq', `${Cypress.config('baseUrl')}/admin/project/${projectId}/release/new`);
+    cy.url().should('eq', `${Cypress.config('baseUrl')}/admin/project/${projectSlug}/release/new`);
 
     cy.waitToAvoidDetachedElements();
     cy.get('input#title').type(title).should('have.value', title);
@@ -37,5 +37,5 @@ export function createRelease(projectId, title, hidden, shortDesc, longDesc, ver
 
     cy.get("button[type='submit']").contains('Create').click();
 
-    cy.url().should('eq', `${Cypress.config('baseUrl')}/admin/project/${projectId}`);
+    cy.url().should('eq', `${Cypress.config('baseUrl')}/admin/project/${projectSlug}`);
 }
