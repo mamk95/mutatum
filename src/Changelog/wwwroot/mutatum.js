@@ -105,7 +105,7 @@ class Mutatum {
         popoverElement.appendChild(heading);
     }
 
-    static AddPopoverFooterHtml(popoverElement, projectId) {
+    static AddPopoverFooterHtml(popoverElement, projectSlug) {
         const footer = document.createElement('div');
         footer.className = "mutatum--footer";
 
@@ -120,7 +120,7 @@ class Mutatum {
         footer.appendChild(poweredByWrapper);
 
         const showMore = document.createElement('a');
-        showMore.href = `${Mutatum.getCurrentScriptURL()}project/${projectId}`;
+        showMore.href = `${Mutatum.getCurrentScriptURL()}project/${projectSlug}`;
         showMore.target = "_blank";
         showMore.className = "mutatum--show-more";
         showMore.appendChild(document.createTextNode("Show more"));
@@ -129,10 +129,10 @@ class Mutatum {
         popoverElement.appendChild(footer);
     }
 
-    static FillPopoverIfEmpty(popover, projectId) {
+    static FillPopoverIfEmpty(popover, projectSlug) {
         if (popover.hasChildNodes()) return;
 
-        fetch(`${Mutatum.getCurrentScriptURL()}api/project/${projectId}`)
+        fetch(`${Mutatum.getCurrentScriptURL()}api/project/${projectSlug}`)
             .then(response => response.json())
             .then(data => {
                 Mutatum.AddPopoverHeaderHtml(popover);
@@ -144,11 +144,11 @@ class Mutatum {
                 else
                     Mutatum.AddPopoverNoReleasesMessageHtml(popover);
             }).then(() => {
-                Mutatum.AddPopoverFooterHtml(popover, projectId);
+                Mutatum.AddPopoverFooterHtml(popover, projectSlug);
             });
     }
 
-    static AddPopover(referenceTargetId, projectId, placement = "auto") {
+    static AddPopover(referenceTargetId, projectSlug, placement = "auto") {
         const referenceTarget = document.getElementById(referenceTargetId);
         const popover = Mutatum.AddPopoverHtml(`mutatum--popover-${Mutatum.getUniqueNumber()}`);
 
@@ -167,11 +167,11 @@ class Mutatum {
         const events = ['click', 'touchend'];
 
         events.forEach((event) => {
-            document.addEventListener(event, (e) => Mutatum.showOrHidePopover(e, referenceTarget, popover, popperInstance, projectId));
+            document.addEventListener(event, (e) => Mutatum.showOrHidePopover(e, referenceTarget, popover, popperInstance, projectSlug));
         });
     }
 
-    static showOrHidePopover(event, referenceTargetElement, popoverElement, popperInstance, projectId) {
+    static showOrHidePopover(event, referenceTargetElement, popoverElement, popperInstance, projectSlug) {
         const target = event.target;
 
         // clicking inside popover should not change anything
@@ -182,15 +182,15 @@ class Mutatum {
                 // Already visible, let's hide it
                 Mutatum.hide(popoverElement, popperInstance);
             } else {
-                Mutatum.show(popoverElement, popperInstance, projectId);
+                Mutatum.show(popoverElement, popperInstance, projectSlug);
             }
         } else {
             Mutatum.hide(popoverElement, popperInstance);
         }
     }
 
-    static show(popoverElement, popperInstance, projectId) {
-        Mutatum.FillPopoverIfEmpty(popoverElement, projectId);
+    static show(popoverElement, popperInstance, projectSlug) {
+        Mutatum.FillPopoverIfEmpty(popoverElement, projectSlug);
 
         popoverElement.setAttribute('data-show', '');
 
