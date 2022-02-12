@@ -1,32 +1,79 @@
-﻿<div>
+﻿@using System.Text.RegularExpressions
+@using Blazored.FluentValidation
+@inject NavigationManager NavigationManager
+
+<div class="mb-3">
     <label for="name" class="form-label">Name</label>
 
     <InputText id="name" @bind-Value="project.Name" class="form-control" />
 </div>
 
-<div>
+<div class="mb-3">
+    <label for="slug" class="form-label">URL Slug</label>
+
+    <InputText id="slug" @bind-Value="project.UrlSlug" placeholder="@slugFromName" class="form-control" />
+
+    <ValidationMessage For="() => project.UrlSlug" />
+
+    @if (projectUrl != null)
+    {
+        <div>Project URL will be <a href="@projectUrl">@projectUrl</a></div>
+    }
+</div>
+
+<div class="mb-3">
     <label for="desc" class="form-label">Description</label>
 
     <InputText id="desc" @bind-Value="project.Description" class="form-control" />
 </div>
 
-<div>
+<div class="mb-3">
     <label for="sort" class="form-label">Sort order (sidebar)</label>
 
     <InputNumber id="sort" @bind-Value="project.SortOrder" class="form-control" />
 </div>
 
-<div>
+<div class="mb-3">
     <label for="hidden" class="form-label">Hidden/disabled</label>
 
     <InputCheckbox id="hidden" @bind-Value="project.Hidden" />
 </div>
 
 <DataAnnotationsValidator />
+<FluentValidationValidator />
 
 <ValidationSummary />
 
 @code {
     [Parameter]
     public Project project { get; set; }
+
+    private string slugFromName
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(project.Name))
+                return "Example: project-name";
+
+            var projectNameLowerCaseWithoutSpaces = project.Name.ToLowerInvariant().Replace(' ', '-');
+            var urlFriendlyName = Regex.Replace(
+                                            projectNameLowerCaseWithoutSpaces,
+                                            @"[^a-z0-9\-]+", // Any char not a-z, 0-9, or dash ("^" means "not"/negated)
+                                            ""); // Replace matched chars with nothing
+
+            var cutToMax16length = urlFriendlyName.Substring(0, Math.Min(16, urlFriendlyName.Length));
+            return $"Example: {cutToMax16length}";
+        }
+    }
+
+    private string projectUrl
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(project.UrlSlug))
+                return null;
+
+            return $"{NavigationManager.BaseUri}{project.UrlSlug}";
+        }
+    }
 }

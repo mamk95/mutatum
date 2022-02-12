@@ -76,11 +76,50 @@ namespace Changelog.Data
                 .FirstOrDefault();
         }
 
-        public Project AddProject(string name, string description, bool hidden, int sortOrder)
+        public Project GetProjectBySlug(string slug, bool includeHidden = false)
+        {
+            return _context.Projects
+                .Where(p => p.UrlSlug == slug)
+                .Where(p => p.Hidden == false || p.Hidden == includeHidden) // If includeHidden==true, we want both hidden and non-hidden projects
+                .Include(p => p.Releases
+                    .Where(r => r.Hidden == false || r.Hidden == includeHidden) // If includeHidden==true, we want both hidden and non-hidden releases
+                    .OrderByDescending(r => r.ReleaseYear)
+                    .ThenByDescending(r => r.ReleaseMonth)
+                    .ThenByDescending(r => r.ReleaseDay)
+                    .ThenByDescending(r => r.Major)
+                    .ThenByDescending(r => r.Minor)
+                    .ThenByDescending(r => r.Patch))
+                .ThenInclude(r => r.Changes)
+                .ThenInclude(c => c.Category)
+                .FirstOrDefault();
+        }
+
+        public int GetProjectIdBySlug(string slug, bool includeHidden = false)
+        {
+            return _context.Projects
+                .Where(p => p.UrlSlug == slug)
+                .Where(p => p.Hidden == false || p.Hidden == includeHidden) // If includeHidden==true, we want both hidden and non-hidden projects
+                .Select(p => p.Id)
+                .First();
+        }
+
+        /// <summary>
+        /// Checks if the slug is already used by another project in the database.
+        /// </summary>
+        /// <param name="slug">The slug to check for.</param>
+        /// <param name="ignoreProjectId">Optional project ID to ignore, e.g. if you want to check if the slug is in use by any other project but this specific ID.</param>
+        /// <returns>True if in use, False in not in use.</returns>
+        public bool IsSlugUsed(string slug, int? ignoreProjectId)
+        {
+            return _context.Projects.Any(p => p.UrlSlug == slug && p.Id != ignoreProjectId);
+        }
+
+        public Project AddProject(string name, string slug, string description, bool hidden, int sortOrder)
         {
             var project = new Project
             {
                 Name = name,
+                UrlSlug = slug,
                 Description = description,
                 Hidden = hidden,
                 SortOrder = sortOrder,
@@ -92,7 +131,7 @@ namespace Changelog.Data
             return result;
         }
 
-        public Project UpdateProject(int id, string name, string description, bool hidden, int sortOrder)
+        public Project UpdateProject(int id, string name, string slug, string description, bool hidden, int sortOrder)
         {
             Project project = _context.Projects.Find(id);
 
@@ -102,6 +141,7 @@ namespace Changelog.Data
             }
 
             project.Name = name;
+            project.UrlSlug = slug;
             project.Description = description;
             project.Hidden = hidden;
             project.SortOrder = sortOrder;

@@ -14,10 +14,10 @@ namespace Changelog.Controllers
             _projectService = projectService;
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<Project> GetProjectById(int id)
+        [HttpGet("{slug}")]
+        public ActionResult<Project> GetProjectBySlug(string slug)
         {
-            Project project = _projectService.GetProjectById(id, includeHidden: false);
+            Project project = _projectService.GetProjectBySlug(slug, includeHidden: false);
 
             if (project == null)
                 return NotFound();

@@ -1,6 +1,7 @@
-﻿@page "/admin/project/{projectId:int}/release/new"
+﻿@page "/admin/project/{projectSlug}/release/new"
 @attribute [Authorize]
 
+@inject ProjectService _projectService
 @inject ReleaseService _releaseService
 @inject NavigationManager NavigationManager
 
@@ -27,7 +28,7 @@
 
 @code {
     [Parameter]
-    public int projectId { get; set; }
+    public string projectSlug { get; set; }
 
     private Release release { get; set; } = new Release();
 
@@ -48,8 +49,8 @@
 
     private void CreateRelease()
     {
-        release.ProjectId = projectId;
+        release.ProjectId = _projectService.GetProjectIdBySlug(projectSlug, includeHidden: true);
         _releaseService.CreateRelease(release);
-        NavigationManager.NavigateTo($"/admin/project/{projectId}", true);
+        NavigationManager.NavigateTo($"/admin/project/{projectSlug}", true);
     }
 }

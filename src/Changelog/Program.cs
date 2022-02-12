@@ -14,7 +14,13 @@ DatabaseOptions dbOptions = builder.Configuration.GetSection(DatabaseOptions.App
 
 if (dbOptions.Provider == "InMemory")
 {
-    builder.Services.AddDbContext<AppDbContext, InMemoryDbContext>(options => options.UseInMemoryDatabase(dbOptions.InMemory.DatabaseName));
+    builder.Services.AddDbContext<AppDbContext, InMemoryDbContext>(options =>
+    {
+        options.UseInMemoryDatabase(dbOptions.InMemory.DatabaseName);
+#if DEBUG
+        options.EnableSensitiveDataLogging();
+#endif
+    });
 }
 else if (dbOptions.Provider == "MySQL")
 {

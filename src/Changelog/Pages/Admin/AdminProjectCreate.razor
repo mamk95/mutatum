@@ -19,7 +19,7 @@
 
     private void CreateProject()
     {
-        _projectService.AddProject(project.Name, project.Description, project.Hidden, project.SortOrder);
+        _projectService.AddProject(project.Name, project.UrlSlug, project.Description, project.Hidden, project.SortOrder);
         NavigationManager.NavigateTo("/admin/project", true);
     }
 }

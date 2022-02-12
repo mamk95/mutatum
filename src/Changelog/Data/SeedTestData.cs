@@ -100,6 +100,7 @@ public static class SeedTestData
             _project1 = context.Projects.Add(new Project
             {
                 Name = "Project 1",
+                UrlSlug = "proj1",
                 Description = "The first test project",
                 SortOrder = 1,
             });
@@ -107,6 +108,7 @@ public static class SeedTestData
             _project2 = context.Projects.Add(new Project
             {
                 Name = "Project 2",
+                UrlSlug = "proj2",
                 Description = "The second test project",
                 SortOrder = 2,
             });
@@ -114,26 +116,31 @@ public static class SeedTestData
             context.Projects.Add(new Project
             {
                 Name = "Project 3",
+                UrlSlug = "cool-url",
             });
 
             context.Projects.Add(new Project
             {
                 Name = "Project 4",
+                UrlSlug = "proj4",
             });
 
             context.Projects.Add(new Project
             {
                 Name = "Project 5",
+                UrlSlug = "proj5",
             });
 
             context.Projects.Add(new Project
             {
                 Name = "Project 6",
+                UrlSlug = "proj6",
             });
 
             context.Projects.Add(new Project
             {
                 Name = "Hidden project",
+                UrlSlug = "hidden",
                 Hidden = true,
             });
         }

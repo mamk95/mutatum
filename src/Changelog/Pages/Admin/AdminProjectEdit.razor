@@ -1,4 +1,4 @@
-﻿@page "/admin/project/{projectId:int}/edit"
+﻿@page "/admin/project/{projectSlug}/edit"
 @attribute [Authorize]
 
 @using Changelog.Data
@@ -23,7 +23,7 @@ else
 
 @code {
     [Parameter]
-    public int projectId { get; set; }
+    public string projectSlug { get; set; }
 
     private Project project { get; set; }
 
@@ -31,7 +31,7 @@ else
 
     protected override void OnParametersSet()
     {
-        project = _projectService.GetProjectById(projectId, includeHidden: true);
+        project = _projectService.GetProjectBySlug(projectSlug, includeHidden: true);
 
         if (project == null)
         {
@@ -41,7 +41,7 @@ else
 
     private void UpdateProject()
     {
-        _projectService.UpdateProject(projectId, project.Name, project.Description, project.Hidden, project.SortOrder);
+        _projectService.UpdateProject(project.Id, project.Name, project.UrlSlug, project.Description, project.Hidden, project.SortOrder);
         NavigationManager.NavigateTo("/admin/project", true);
     }
 }

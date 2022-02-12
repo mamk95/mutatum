@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace Changelog.Data
 {
+    [Index(nameof(UrlSlug), IsUnique = true)]
     public class Project
     {
         [Key]
@@ -9,6 +11,11 @@ namespace Changelog.Data
 
         [Required]
         public string Name { get; set; }
+
+        [Required]
+        [StringLength(maximumLength: 16, MinimumLength = 1)]
+        [RegularExpression(@"^[a-z0-9\-]*$", ErrorMessage = "Only URL friendly characters allowed in slug (lowercase a-z, 0-9 and dashes).")]
+        public string UrlSlug { get; set; }
 
         public string Description { get; set; }
 
