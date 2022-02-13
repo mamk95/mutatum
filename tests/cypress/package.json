@@ -23,6 +23,6 @@
   },
   "homepage": "https://github.com/mamk95/mutatum#readme",
   "devDependencies": {
-    "cypress": "^9.1.1"
+    "cypress": "^9.4.1"
   }
 }
