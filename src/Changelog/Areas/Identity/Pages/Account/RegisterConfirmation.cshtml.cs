@@ -1,5 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
+namespace Changelog.Areas.Identity.Pages.Account;
 #nullable disable
 
 using Changelog.Data;
@@ -8,36 +9,33 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Changelog.Areas.Identity.Pages.Account
+[AllowAnonymous]
+public class RegisterConfirmationModel : PageModel
 {
-    [AllowAnonymous]
-    public class RegisterConfirmationModel : PageModel
+    private readonly UserManager<ApplicationUser> _userManager;
+
+    public RegisterConfirmationModel(UserManager<ApplicationUser> userManager)
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        _userManager = userManager;
+    }
 
-        public RegisterConfirmationModel(UserManager<ApplicationUser> userManager)
+    public string Email { get; set; }
+
+    public async Task<IActionResult> OnGetAsync(string email)
+    {
+        if (email == null)
         {
-            _userManager = userManager;
+            return RedirectToPage("/Index");
         }
 
-        public string Email { get; set; }
-
-        public async Task<IActionResult> OnGetAsync(string email)
+        ApplicationUser user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
         {
-            if (email == null)
-            {
-                return RedirectToPage("/Index");
-            }
-
-            ApplicationUser user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user with email '{email}'.");
-            }
-
-            Email = email;
-
-            return Page();
+            return NotFound($"Unable to load user with email '{email}'.");
         }
+
+        Email = email;
+
+        return Page();
     }
 }

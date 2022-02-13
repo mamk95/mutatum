@@ -74,10 +74,7 @@ csharp_new_line_before_members_in_anonymous_types = true # require members of an
 dotnet_diagnostic.IDE0005.severity = error # error on unused usings
 dotnet_separate_import_directive_groups = false 
 dotnet_sort_system_directives_first = true # sort System.* using directives alphabetically, and place them before other usings
-# TODO #csharp_using_directive_placement = inside_namespace # Prefer using directives to be placed inside the namespace. See why here: https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1200.md
-# TODO Remove below
-dotnet_diagnostic.SA1200.severity = none
-# TODO remove above
+csharp_using_directive_placement = inside_namespace # Prefer using directives to be placed inside the namespace. See why here: https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/SA1200.md
 
 #Formatting - spacing options
 csharp_space_after_colon_in_inheritance_clause = true # require a space before the colon for bases or interfaces in a type declaration
@@ -97,10 +94,7 @@ csharp_preserve_single_line_statements = true # leave statements and member decl
 #Style - Code block preferences
 csharp_prefer_braces = false:suggestion # do not prefer curly braces for one line of code
 dotnet_diagnostic.SA1503.severity = none # SA1503: Braces should not be omitted
-# TODO remove below
-csharp_style_namespace_declarations=file_scoped:none # Namespace declarations should be file scoped, meaning "namespace Name;", not "namespace Name {}"
-# TODO remove above
-# TODO #csharp_style_namespace_declarations=file_scoped:error # Namespace declarations should be file scoped, meaning "namespace Name;", not "namespace Name {}"
+csharp_style_namespace_declarations=file_scoped:error # Namespace declarations should be file scoped, meaning "namespace Name;", not "namespace Name {}"
 
 #Style - expression bodied member options
 csharp_style_expression_bodied_constructors = false:suggestion # prefer block bodies for constructors

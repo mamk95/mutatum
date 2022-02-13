@@ -1,6 +1,5 @@
-﻿using FluentValidation;
-
-namespace Changelog.Data;
+﻿namespace Changelog.Data;
+using FluentValidation;
 
 public class ProjectValidator : AbstractValidator<Project>
 {

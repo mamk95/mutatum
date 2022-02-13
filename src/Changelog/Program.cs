@@ -1,4 +1,6 @@
-﻿using Changelog;
+﻿#pragma warning disable SA1200 // Using directives should be placed correctly. Reason: There is no namespace in Program.cs
+
+using Changelog;
 using Changelog.Areas.Identity;
 using Changelog.Data;
 using Changelog.Data.Database;
@@ -7,6 +9,8 @@ using Changelog.Data.Options.Database;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+
+#pragma warning restore SA1200 // Using directives should be placed correctly
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

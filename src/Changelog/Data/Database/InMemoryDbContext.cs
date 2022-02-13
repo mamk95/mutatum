@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿namespace Changelog.Data.Database;
 
-namespace Changelog.Data.Database
+using Microsoft.EntityFrameworkCore;
+
+public class InMemoryDbContext : AppDbContext
 {
-    public class InMemoryDbContext : AppDbContext
+    public InMemoryDbContext(DbContextOptions options) : base(options)
     {
-        public InMemoryDbContext(DbContextOptions options) : base(options)
-        {
-        }
     }
 }

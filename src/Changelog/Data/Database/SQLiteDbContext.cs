@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿namespace Changelog.Data.Database;
 
-namespace Changelog.Data.Database
+using Microsoft.EntityFrameworkCore;
+
+public class SQLiteDbContext : AppDbContext
 {
-    public class SQLiteDbContext : AppDbContext
+    public SQLiteDbContext(DbContextOptions options) : base(options)
     {
-        public SQLiteDbContext(DbContextOptions options) : base(options)
-        {
-        }
     }
 }

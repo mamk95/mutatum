@@ -1,12 +1,11 @@
-﻿using System.Globalization;
+﻿namespace Changelog.Data;
+using System.Globalization;
 using Changelog.Data.Database;
 using Changelog.Data.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Options;
-
-namespace Changelog.Data;
 
 public static class SeedTestData
 {

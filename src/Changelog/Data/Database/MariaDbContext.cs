@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿namespace Changelog.Data.Database;
 
-namespace Changelog.Data.Database
+using Microsoft.EntityFrameworkCore;
+
+public class MariaDbContext : AppDbContext
 {
-    public class MariaDbContext : AppDbContext
+    public MariaDbContext(DbContextOptions options) : base(options)
     {
-        public MariaDbContext(DbContextOptions options) : base(options)
-        {
-        }
     }
 }
